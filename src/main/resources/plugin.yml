@@ -1,0 +1,9 @@
+main: dev.covector.customarrows.CustomArrowsPlugin
+name: CustomArrows
+version: 1.0
+api-version: '1.20'
+
+commands:
+   ca:
+      description: Give custom arrows and bow
+      usage: /<command> list OR /<command> bow [slots] OR /<command> arrow [typeId] OR /<command> bind [slots] OR /<command> test [key] [value]
