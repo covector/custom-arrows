@@ -67,7 +67,7 @@ public class ArrowListener implements Listener {
                 if (event.getHitEntity() != null) {
                     ArrowRegistry.getArrowType(id).onHitEntity(player, arrow, event.getHitEntity());
                 } else if (event.getHitBlock() != null) {
-                    ArrowRegistry.getArrowType(id).onHitGround(player, arrow, event.getHitBlock().getLocation().add(0.5, 0.5, 0.5).add(event.getHitBlockFace().getDirection().multiply(.5)));
+                    ArrowRegistry.getArrowType(id).onHitGround(player, arrow, event.getHitBlock().getLocation().add(0.5, 0.5, 0.5).add(event.getHitBlockFace().getDirection().multiply(.5)), event.getHitBlockFace());
                     // ArrowRegistry.getArrowType(id).onHitGround(player, arrow, arrow.getLocation());
                 }
             }

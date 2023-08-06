@@ -7,18 +7,16 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.CrossbowMeta;
+import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 
-public class MarkingArrow extends CustomArrow {
-    private static Color color = Color.fromRGB(255, 226, 79);
-    private static String name = "Marking Arrow";
-    private int duration;
+import java.util.Arrays;
 
-    public MarkingArrow(int duration) {
-        this.duration = duration;
-    }
+public class ChainingArrow extends CustomArrow {
+    private static Color color = Color.fromRGB(245, 152, 66);
+    private static String name = "Chaining Arrow";
 
     public void onHitGround(Player shooter, Arrow arrow, Location location, BlockFace blockFace) {
         arrow.remove();
@@ -28,8 +26,13 @@ public class MarkingArrow extends CustomArrow {
         if (!(entity instanceof LivingEntity)) {
             return;
         }
-        LivingEntity livingEntity = (LivingEntity) entity;
-        livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, duration * 20, 0));
+        ItemStack crossBow = shooter.getInventory().getItemInMainHand();
+        crossBow = crossBow.getType() == Material.CROSSBOW ? crossBow : shooter.getInventory().getItemInOffHand();
+        if (crossBow.getType() == Material.CROSSBOW) {
+            CrossbowMeta bowMeta = (CrossbowMeta)crossBow.getItemMeta();
+            bowMeta.setChargedProjectiles(Arrays.asList(new ItemStack(Material.ARROW, 1)));
+            crossBow.setItemMeta(bowMeta);
+        }
     }
 
     public Color getColor() {

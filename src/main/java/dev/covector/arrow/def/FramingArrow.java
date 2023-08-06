@@ -7,13 +7,14 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.block.BlockFace;
 
 
 public class FramingArrow extends CustomArrow {
     private static Color color = Color.fromRGB(58, 202, 207);
     private static String name = "Framing Arrow";
 
-    public void onHitGround(Player shooter, Arrow arrow, Location location) {
+    public void onHitGround(Player shooter, Arrow arrow, Location location, BlockFace blockFace) {
         arrow.remove();
     }
 

@@ -8,12 +8,13 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.block.BlockFace;
 
 public class TrueDamageArrow extends CustomArrow {
     private static Color color = Color.fromRGB(74, 10, 5);
     private String name = "True Damage Arrow";
 
-    public void onHitGround(Player shooter, Arrow arrow, Location location) {
+    public void onHitGround(Player shooter, Arrow arrow, Location location, BlockFace blockFace) {
         arrow.remove();
     }
 

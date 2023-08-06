@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.block.BlockFace;
 
 
 public class DamageOverTimeArrow extends CustomArrow {
@@ -22,7 +23,7 @@ public class DamageOverTimeArrow extends CustomArrow {
         this.amplifier = amplifier;
     }
 
-    public void onHitGround(Player shooter, Arrow arrow, Location location) {
+    public void onHitGround(Player shooter, Arrow arrow, Location location, BlockFace blockFace) {
         arrow.remove();
     }
 

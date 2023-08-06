@@ -7,6 +7,7 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.block.BlockFace;
 
 public class PercentDamageArrow extends CustomArrow {
     private static Color color = Color.fromRGB(74, 10, 5);
@@ -17,7 +18,7 @@ public class PercentDamageArrow extends CustomArrow {
         this.percent = percent;
     }
 
-    public void onHitGround(Player shooter, Arrow arrow, Location location) {
+    public void onHitGround(Player shooter, Arrow arrow, Location location, BlockFace blockFace) {
         arrow.remove();
     }
 

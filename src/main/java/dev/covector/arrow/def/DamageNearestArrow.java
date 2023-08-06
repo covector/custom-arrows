@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.NamespacedKey;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.block.BlockFace;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -25,7 +26,7 @@ public class DamageNearestArrow extends CustomArrow {
         this.key = new NamespacedKey(CustomArrowsPlugin.plugin, "arrow-types");
     }
 
-    public void onHitGround(Player shooter, Arrow arrow, Location location) {
+    public void onHitGround(Player shooter, Arrow arrow, Location location, BlockFace blockFace) {
         Collection<Entity> entities = location.getWorld().getNearbyEntities(location, radius, radius, radius);
         EntityDistance[] entityDistances = new EntityDistance[entities.size()];
         int j = 0;
@@ -69,7 +70,7 @@ public class DamageNearestArrow extends CustomArrow {
         for (int id : ids) {
             if (ArrowRegistry.getArrowType(id) instanceof PierceAwareArrow) {
                 PierceAwareArrow pierceAwareArrow = (PierceAwareArrow) ArrowRegistry.getArrowType(id);
-                pierceAwareArrow.onHitGround(shooter, arrow, location);
+                pierceAwareArrow.onHitGround(shooter, arrow, location, blockFace);
             }
         }
 

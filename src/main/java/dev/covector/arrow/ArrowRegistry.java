@@ -18,6 +18,9 @@ public class ArrowRegistry {
         arrowTypes.add(new FramingArrow()); // 9
         arrowTypes.add(new LandMineArrow(1, 1, 40, 4, 4, 15, "Small")); // 10
         arrowTypes.add(new LandMineArrow(3, 3, 20, 6, 6, 30, "Big")); // 11
+        arrowTypes.add(new ChainingArrow()); // 12
+        arrowTypes.add(new RidingArrow()); // 13
+        arrowTypes.add(new WallLaserArrow()); // 14
     }
 
     public static CustomArrow getArrowType(int index) {

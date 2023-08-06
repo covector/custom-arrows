@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.bukkit.Particle;
+import org.bukkit.block.BlockFace;
 
 import dev.covector.customarrows.CustomArrowsPlugin;
 
@@ -32,7 +33,7 @@ public class TornadoArrow extends CustomArrow {
         this.suffix = suffix;
     }
 
-    public void onHitGround(Player shooter, Arrow arrow, Location location) {
+    public void onHitGround(Player shooter, Arrow arrow, Location location, BlockFace blockFace) {
         double period = 10.0;
         int interval = 2;
         new BukkitRunnable() {

@@ -12,6 +12,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
+import org.bukkit.block.BlockFace;
 
 import java.util.Random;
 
@@ -44,7 +45,11 @@ public class LandMineArrow extends CustomArrow {
         this.suffix = suffix;
     }
 
-    public void onHitGround(Player shooter, Arrow arrow, Location location) {
+    public void onHitGround(Player shooter, Arrow arrow, Location location, BlockFace blockFace) {
+        if (blockFace != BlockFace.UP) {
+            arrow.remove();
+            return;
+        }
         double period = 10.0;
         int interval = 2;
         new BukkitRunnable() {

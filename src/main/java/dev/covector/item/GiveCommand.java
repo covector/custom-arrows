@@ -25,11 +25,21 @@ public class GiveCommand implements CommandExecutor {
                     for (int i = 0; i < ArrowRegistry.getArrowTypeCount(); i++) {
                         sender.sendMessage(ChatColor.GRAY + " - " + ChatColor.GOLD + ArrowRegistry.getArrowType(i).getName() + ChatColor.GRAY + " (ID " + i + ")");
                     }
+                    return true;
                 }
-                return true;
+                break;
             case 2:
                 if (args[0].equals("arrow")) {
-                    int id = Integer.parseInt(args[1]);
+                    int id;
+                    try {
+                        id = Integer.parseInt(args[1]);
+                        if (id < 0 || id >= ArrowRegistry.getArrowTypeCount()) {
+                            throw new NumberFormatException();
+                        }
+                    } catch (NumberFormatException e) {
+                        sender.sendMessage(ChatColor.RED + "Invalid ID.");
+                        return false;
+                    }
                     ItemStack item = ItemManager.createCustomArrow(id);
                     ItemMeta itemMeta = item.getItemMeta();
                     // itemMeta.setDisplayName(ChatColor.GOLD + "Custom Arrow" + ChatColor.GRAY + " (ID " + id + ")");
@@ -40,9 +50,19 @@ public class GiveCommand implements CommandExecutor {
                         player.getInventory().addItem(item);
                         player.sendMessage(ChatColor.GREEN + "Successfully gave you a custom arrow.");
                     }
+                    return true;
                 }
                 if (args[0].equals("bow")) {
-                    int slot = Integer.parseInt(args[1]);
+                    int slot;
+                    try {
+                        slot = Integer.parseInt(args[1]);
+                        if (slot < 0) {
+                            throw new NumberFormatException();
+                        }
+                    } catch (NumberFormatException e) {
+                        sender.sendMessage(ChatColor.RED + "Invalid Slot Number.");
+                        return false;
+                    }
                     ItemStack item = ItemManager.createCustomBow(slot);
                     ItemMeta itemMeta = item.getItemMeta();
                     itemMeta.setUnbreakable(true);
@@ -53,23 +73,35 @@ public class GiveCommand implements CommandExecutor {
                         player.getInventory().addItem(item);
                         player.sendMessage(ChatColor.GREEN + "Successfully gave you a custom bow.");
                     }
+                    return true;
                 }
                 if (args[0].equals("bind")) {
                     if (sender instanceof Player) {
-                        int slot = Integer.parseInt(args[1]);
+                        int slot;
+                        try {
+                            slot = Integer.parseInt(args[1]);
+                            if (slot < 0) {
+                                throw new NumberFormatException();
+                            }
+                        } catch (NumberFormatException e) {
+                            sender.sendMessage(ChatColor.RED + "Invalid Slot Number.");
+                            return false;
+                        }
                         Player player = (Player) sender;
                         ItemStack main = player.getInventory().getItemInMainHand();
                         ItemStack newBow = ItemManager.modifyCustomBowSlot(main, slot);
                         player.getInventory().setItemInMainHand(newBow);
                         player.sendMessage(ChatColor.GREEN + "Successfully bind to bow.");
                     }
+                    return true;
                 }
-                return true;
+                break;
             case 3:
                 if (args[0].equals("test")) {
                     ParamTester.set(args[1], Integer.parseInt(args[2]));
+                    return true;
                 }
-                return true;
+                break;
         }
 
         return false;

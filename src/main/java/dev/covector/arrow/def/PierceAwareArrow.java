@@ -6,13 +6,14 @@ import org.bukkit.Location;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.block.BlockFace;
 
 import java.util.HashMap;
 
 public abstract class PierceAwareArrow extends CustomArrow {
     private HashMap<String, PierceEntityData> piercedEntities = new HashMap<String, PierceEntityData>();
 
-    public void onHitGround(Player shooter, Arrow arrow, Location location) {
+    public void onHitGround(Player shooter, Arrow arrow, Location location, BlockFace blockFace) {
         if (piercedEntities.containsKey(arrow.getUniqueId().toString())) {
             PierceEntityData data = piercedEntities.get(arrow.getUniqueId().toString());
             onAfterHitAll(shooter, arrow, removeNull(data.piercedEntities));
