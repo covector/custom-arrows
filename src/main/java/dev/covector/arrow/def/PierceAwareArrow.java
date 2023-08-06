@@ -1,5 +1,6 @@
 package dev.covector.customarrows.arrow;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.entity.Arrow;
@@ -19,13 +20,14 @@ public abstract class PierceAwareArrow extends CustomArrow {
         } else {
             onAfterHitAll(shooter, arrow, new Entity[]{});
         }
+        arrow.remove();
     }
 
     public void onHitEntity(Player shooter, Arrow arrow, Entity entity) {
         if (piercedEntities.containsKey(arrow.getUniqueId().toString())) {
             PierceEntityData data = piercedEntities.get(arrow.getUniqueId().toString());
             data.addPiercedEntity(entity);
-            if (arrow.getPierceLevel() == 0) {
+            if (arrow.getPierceLevel() + 1 <= data.piercedCount) {
                 onAfterHitAll(shooter, arrow, removeNull(data.piercedEntities));
                 piercedEntities.remove(arrow.getUniqueId().toString());
             }

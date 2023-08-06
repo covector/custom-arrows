@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.LivingEntity;
 
 public class PercentDamageArrow extends CustomArrow {
-    private static Color color = Color.fromRGB(41, 7, 3);
+    private static Color color = Color.fromRGB(74, 10, 5);
     private static String name = "Percent Damage Arrow";
     private double percent;
 
@@ -18,6 +18,7 @@ public class PercentDamageArrow extends CustomArrow {
     }
 
     public void onHitGround(Player shooter, Arrow arrow, Location location) {
+        arrow.remove();
     }
 
     public void onHitEntity(Player shooter, Arrow arrow, Entity entity) {
@@ -28,7 +29,7 @@ public class PercentDamageArrow extends CustomArrow {
     }
 
     public double ModifyDamage(Player shooter, Arrow arrow, LivingEntity entity, double damage) {
-        return Math.min(percent * entity.getHealth(), damage * 4);
+        return Math.min(percent * entity.getHealth(), damage * 2.5);
     }
     
     public String getName() {

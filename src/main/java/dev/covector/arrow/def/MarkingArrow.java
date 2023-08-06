@@ -20,6 +20,7 @@ public class MarkingArrow extends CustomArrow {
     }
 
     public void onHitGround(Player shooter, Arrow arrow, Location location) {
+        arrow.remove();
     }
 
     public void onHitEntity(Player shooter, Arrow arrow, Entity entity) {

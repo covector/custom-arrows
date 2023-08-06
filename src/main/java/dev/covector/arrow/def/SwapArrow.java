@@ -16,7 +16,7 @@ public class SwapArrow extends PierceAwareArrow {
         if (entities.length == 0) return;
         int firstLivingEntityIndex = -1;
         for (int i = 0; i < entities.length; i++) {
-            if (entities[i] instanceof LivingEntity) {
+            if (entities[i] instanceof LivingEntity && !(entities[i].getUniqueId().toString().equals(shooter.getUniqueId().toString()))) {
                 firstLivingEntityIndex = i;
                 break;
             }
@@ -24,7 +24,7 @@ public class SwapArrow extends PierceAwareArrow {
         if (firstLivingEntityIndex == -1) return;
         Location loc = entities[firstLivingEntityIndex].getLocation().clone();
         for (Entity e : entities) {
-            if (e instanceof LivingEntity && e != shooter) {
+            if (e instanceof LivingEntity && !(e.getUniqueId().toString().equals(shooter.getUniqueId().toString()))) {
                 e.teleport(shooter.getLocation().clone());
             }
         }
