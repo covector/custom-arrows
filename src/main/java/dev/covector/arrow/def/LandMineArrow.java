@@ -94,6 +94,7 @@ public class LandMineArrow extends CustomArrow {
                                 detonateTick = ti;
                             } else {
                                 // deactivate
+                                location.getWorld().spawnParticle(Particle.SMOKE_LARGE, location, 8);
                                 arrow.remove();
                                 cancel();
                             }

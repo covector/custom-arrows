@@ -28,7 +28,7 @@ public class DamageOverTimeArrow extends CustomArrow {
     }
 
     public void onHitEntity(Player shooter, Arrow arrow, Entity entity) {
-        if (!(entity instanceof LivingEntity)) {
+        if (!(entity instanceof LivingEntity) || entity instanceof Player) {
             return;
         }
         LivingEntity livingEntity = (LivingEntity) entity;

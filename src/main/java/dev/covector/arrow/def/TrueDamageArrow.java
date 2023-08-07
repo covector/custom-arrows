@@ -26,6 +26,9 @@ public class TrueDamageArrow extends CustomArrow {
     }
 
     public double ModifyDamage(Player shooter, Arrow arrow, LivingEntity entity, double damage) {
+        if (entity instanceof Player) {
+            return 0;
+        }
         if (entity.getHealth() - 10 <= 0) {
             // entity.setHealth(0);
             return 999;

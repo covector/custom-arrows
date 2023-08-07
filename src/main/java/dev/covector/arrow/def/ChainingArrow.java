@@ -9,30 +9,40 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.CrossbowMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 
 import java.util.Arrays;
 
+import dev.covector.customarrows.CustomArrowsPlugin;
+
 public class ChainingArrow extends CustomArrow {
     private static Color color = Color.fromRGB(245, 152, 66);
     private static String name = "Chaining Arrow";
+    private int delay = 15;
 
     public void onHitGround(Player shooter, Arrow arrow, Location location, BlockFace blockFace) {
         arrow.remove();
     }
 
     public void onHitEntity(Player shooter, Arrow arrow, Entity entity) {
-        if (!(entity instanceof LivingEntity)) {
+        if (!(entity instanceof LivingEntity) || entity instanceof Player) {
             return;
         }
-        ItemStack crossBow = shooter.getInventory().getItemInMainHand();
-        crossBow = crossBow.getType() == Material.CROSSBOW ? crossBow : shooter.getInventory().getItemInOffHand();
-        if (crossBow.getType() == Material.CROSSBOW) {
-            CrossbowMeta bowMeta = (CrossbowMeta)crossBow.getItemMeta();
-            bowMeta.setChargedProjectiles(Arrays.asList(new ItemStack(Material.ARROW, 1)));
-            crossBow.setItemMeta(bowMeta);
-        }
+        new BukkitRunnable() {
+            public void run() {
+                ItemStack crossBow = shooter.getInventory().getItemInMainHand();
+                crossBow = crossBow.getType() == Material.CROSSBOW ? crossBow : shooter.getInventory().getItemInOffHand();
+                if (crossBow.getType() == Material.CROSSBOW) {
+                    CrossbowMeta bowMeta = (CrossbowMeta)crossBow.getItemMeta();
+                    if (!bowMeta.hasChargedProjectiles()) {
+                        bowMeta.setChargedProjectiles(Arrays.asList(new ItemStack(Material.ARROW, 1)));
+                        crossBow.setItemMeta(bowMeta);
+                    }
+                }
+            }
+        }.runTaskLater(CustomArrowsPlugin.plugin, delay);
     }
 
     public Color getColor() {
