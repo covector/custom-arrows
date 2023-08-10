@@ -12,15 +12,17 @@ import org.bukkit.inventory.meta.CrossbowMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
+import org.bukkit.ChatColor;
 
 import java.util.Arrays;
+import java.util.ArrayList;
 
 import dev.covector.customarrows.CustomArrowsPlugin;
 
 public class ChainingArrow extends CustomArrow {
     private static Color color = Color.fromRGB(245, 152, 66);
     private static String name = "Chaining Arrow";
-    private int delay = 15;
+    private int delay = 12;
 
     public void onHitGround(Player shooter, Arrow arrow, Location location, BlockFace blockFace) {
         arrow.remove();
@@ -56,5 +58,12 @@ public class ChainingArrow extends CustomArrow {
     
     public String getName() {
         return name;
+    }
+
+    public ArrayList<String> getLore() {
+        ArrayList<String> lore = new ArrayList<String>();
+        lore.add(ChatColor.WHITE + "Charge your crossbow after hit");
+        lore.add(ChatColor.GRAY + "Has 0.6s delay");
+        return lore;
     }
 }

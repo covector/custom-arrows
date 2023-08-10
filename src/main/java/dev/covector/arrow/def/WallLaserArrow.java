@@ -15,9 +15,11 @@ import org.bukkit.util.RayTraceResult;
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
+import org.bukkit.ChatColor;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.ArrayList;
 
 import dev.covector.customarrows.CustomArrowsPlugin;
 
@@ -26,7 +28,7 @@ public class WallLaserArrow extends CustomArrow {
     private static String name = "Wall Laser Arrow";
     private NamespacedKey key;
     private int hitLimit = 3;
-    private double damage = 2;
+    // private double damage = 2;
 
     public WallLaserArrow() {
         this.key = new NamespacedKey(CustomArrowsPlugin.plugin, "arrow-types");
@@ -140,5 +142,13 @@ public class WallLaserArrow extends CustomArrow {
     
     public String getName() {
         return name;
+    }
+
+    public ArrayList<String> getLore() {
+        ArrayList<String> lore = new ArrayList<String>();
+        lore.add(ChatColor.WHITE + "Shoots a laser from the surface of block hit");
+        lore.add(ChatColor.GRAY + "will trigger on hit entities of other arrows");
+        lore.add(ChatColor.GRAY + "will trigger on hit ground of other arrows if no entity hit");
+        return lore;
     }
 }

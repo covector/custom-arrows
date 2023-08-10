@@ -8,7 +8,7 @@ public class ArrowRegistry {
     public static void register() {
         arrowTypes.add(new SwapArrow()); // 0
         arrowTypes.add(new TornadoArrow(1, 2, 8, "Small")); // 1
-        arrowTypes.add(new TornadoArrow(3, 0.25, 8, "Big")); // 2
+        arrowTypes.add(new TornadoArrow(3, 0.25, 6, "Big")); // 2
         arrowTypes.add(new PercentDamageArrow(0.25)); // 3
         arrowTypes.add(new HalfHealthArrow()); // 4
         arrowTypes.add(new MarkingArrow(10)); // 5
@@ -16,8 +16,8 @@ public class ArrowRegistry {
         arrowTypes.add(new TrueDamageArrow()); // 7
         arrowTypes.add(new DamageNearestArrow()); // 8
         arrowTypes.add(new FramingArrow()); // 9
-        arrowTypes.add(new LandMineArrow(1, 1, 40, 4, 4, 15, "Small")); // 10
-        arrowTypes.add(new LandMineArrow(3, 3, 20, 6, 6, 30, "Big")); // 11
+        arrowTypes.add(new LandMineArrow(1, 1, 80, 4, 4, 15, "Small")); // 10
+        arrowTypes.add(new LandMineArrow(3, 4, 25, 6, 6, 30, "Big")); // 11
         arrowTypes.add(new ChainingArrow()); // 12
         arrowTypes.add(new RidingArrow()); // 13
         arrowTypes.add(new WallLaserArrow()); // 14

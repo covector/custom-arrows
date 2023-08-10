@@ -6,8 +6,10 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.ChatColor;
 
 import java.util.HashMap;
+import java.util.ArrayList;
 
 public class RidingArrow extends PierceAwareArrow {
     private static Color color = Color.fromRGB(16, 16, 156);
@@ -19,7 +21,8 @@ public class RidingArrow extends PierceAwareArrow {
         int livingEntityCount = 0;
         int firstLivingEntityIndex = -1;
         for (int i = 0; i < entities.length; i++) {
-            if (entities[i] instanceof LivingEntity && !(entities[i] instanceof Player)) {
+            // if (entities[i] instanceof LivingEntity && !(entities[i] instanceof Player)) {
+            if (entities[i] instanceof LivingEntity) {
                 livingEntityCount++;
                 if (firstLivingEntityIndex == -1) firstLivingEntityIndex = i;
             }
@@ -29,7 +32,8 @@ public class RidingArrow extends PierceAwareArrow {
         Entity currentEntity = entities[firstLivingEntityIndex];
         if (livingEntityCount != 1) {
             for (int i = firstLivingEntityIndex + 1; i < entities.length; i++) {
-                if (entities[i] instanceof LivingEntity && !(entities[i] instanceof Player)) {
+                // if (entities[i] instanceof LivingEntity && !(entities[i] instanceof Player)) {
+                if (entities[i] instanceof LivingEntity) {
                     currentEntity.addPassenger(entities[i]);
                     currentEntity = entities[i];
                 }
@@ -38,8 +42,10 @@ public class RidingArrow extends PierceAwareArrow {
         if (riders.containsKey(shooterUUID)) {
             if (!(riders.get(shooterUUID).isDead())) {
                 currentEntity.addPassenger(riders.get(shooterUUID));
+                riders.remove(shooterUUID);
+            } else {
+                riders.put(shooterUUID, (LivingEntity) currentEntity);
             }
-            riders.remove(shooterUUID);
         } else if (livingEntityCount == 1) {
             riders.put(shooterUUID, (LivingEntity) currentEntity);
         }
@@ -55,5 +61,13 @@ public class RidingArrow extends PierceAwareArrow {
 
     public String getName() {
         return name;
+    }
+
+    public ArrayList<String> getLore() {
+        ArrayList<String> lore = new ArrayList<String>();
+        lore.add(ChatColor.WHITE + "Make hit entities ride each other");
+        lore.add(ChatColor.GRAY + "If only one entity hit");
+        lore.add(ChatColor.GRAY + "It will ride the next entity hit");
+        return lore;
     }
 }

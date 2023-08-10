@@ -10,7 +10,9 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.block.BlockFace;
+import org.bukkit.ChatColor;
 
+import java.util.ArrayList;
 
 public class DamageOverTimeArrow extends CustomArrow {
     private static Color color = Color.BLACK;
@@ -45,5 +47,12 @@ public class DamageOverTimeArrow extends CustomArrow {
     
     public String getName() {
         return name;
+    }
+
+    public ArrayList<String> getLore() {
+        ArrayList<String> lore = new ArrayList<String>();
+        lore.add(ChatColor.WHITE + "Give wither to target");
+        lore.add(ChatColor.GRAY + "wither " + String.valueOf(amplifier+1) + " for " + String.valueOf(duration) + "s");
+        return lore;
     }
 }

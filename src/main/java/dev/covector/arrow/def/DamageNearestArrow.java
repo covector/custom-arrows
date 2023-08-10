@@ -10,9 +10,11 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.NamespacedKey;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.block.BlockFace;
+import org.bukkit.ChatColor;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.ArrayList;
 
 import dev.covector.customarrows.CustomArrowsPlugin;
 
@@ -105,5 +107,14 @@ public class DamageNearestArrow extends CustomArrow {
     
     public String getName() {
         return name;
+    }
+
+    public ArrayList<String> getLore() {
+        ArrayList<String> lore = new ArrayList<String>();
+        lore.add(ChatColor.WHITE + "Damage nearest entity within 2.5 radius");
+        lore.add(ChatColor.GRAY + "when hit ground");
+        lore.add(ChatColor.GRAY + "compatible with piercing level");
+        lore.add(ChatColor.GRAY + "will trigger on hit entities of other arrows");
+        return lore;
     }
 }

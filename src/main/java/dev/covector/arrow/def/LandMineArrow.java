@@ -13,8 +13,10 @@ import org.bukkit.util.Vector;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.block.BlockFace;
+import org.bukkit.ChatColor;
 
 import java.util.Random;
+import java.util.ArrayList;
 
 import dev.covector.customarrows.CustomArrowsPlugin;
 
@@ -149,5 +151,15 @@ public class LandMineArrow extends CustomArrow {
 
     public String getName() {
         return name + " " + suffix;
+    }
+
+    public ArrayList<String> getLore() {
+        ArrayList<String> lore = new ArrayList<String>();
+        lore.add(ChatColor.WHITE + "Set up a landmine");
+        lore.add(ChatColor.GRAY + "Setup time: " + String.valueOf(setupDuration/20D) + "s");
+        lore.add(ChatColor.GRAY + "Any entity except self will deactivate mine during setup");
+        lore.add(ChatColor.GRAY + "Mine will detonate " + String.valueOf(delayTick/20D) + "s after triggered by entity except self");
+        lore.add(ChatColor.GRAY + "Mine will deactivate after " + String.valueOf(activeDuration/20D) + "s");
+        return lore;
     }
 }

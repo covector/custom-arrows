@@ -8,6 +8,9 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.block.BlockFace;
+import org.bukkit.ChatColor;
+
+import java.util.ArrayList;
 
 public class PercentDamageArrow extends CustomArrow {
     private static Color color = Color.fromRGB(74, 10, 5);
@@ -35,5 +38,12 @@ public class PercentDamageArrow extends CustomArrow {
     
     public String getName() {
         return name;
+    }
+
+    public ArrayList<String> getLore() {
+        ArrayList<String> lore = new ArrayList<String>();
+        lore.add(ChatColor.WHITE + "Deals " + String.valueOf(percent * 100) + "% of target's health");
+        lore.add(ChatColor.GRAY + "Damage capped at 2.5x arrow damage");
+        return lore;
     }
 }

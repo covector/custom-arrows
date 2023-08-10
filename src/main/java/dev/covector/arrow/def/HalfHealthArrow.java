@@ -9,6 +9,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.block.BlockFace;
+import org.bukkit.ChatColor;
+
+import java.util.ArrayList;
 
 public class HalfHealthArrow extends CustomArrow {
     private static Color color = Color.fromRGB(74, 10, 5);
@@ -28,6 +31,10 @@ public class HalfHealthArrow extends CustomArrow {
     public double ModifyDamage(Player shooter, Arrow arrow, LivingEntity entity, double damage) {
         double maxhealth = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
         if (entity.getHealth() > 0.5 * maxhealth) {
+            if (entity instanceof Player) {
+                entity.setHealth(0.5 * maxhealth);
+                return 0;
+            }
             return Math.min(entity.getHealth() - 0.5 * maxhealth, damage * 3);
         } else {
             entity.setHealth(0.5 * maxhealth);
@@ -37,5 +44,13 @@ public class HalfHealthArrow extends CustomArrow {
 
     public String getName() {
         return name;
+    }
+
+    public ArrayList<String> getLore() {
+        ArrayList<String> lore = new ArrayList<String>();
+        lore.add(ChatColor.WHITE + "Cut hit entity's health in half");
+        lore.add(ChatColor.GRAY + "Damage capped at 3x arrow damage");
+        lore.add(ChatColor.GRAY + "Can affect players");
+        return lore;
     }
 }

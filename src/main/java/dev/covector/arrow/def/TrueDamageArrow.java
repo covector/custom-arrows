@@ -9,10 +9,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.block.BlockFace;
+import org.bukkit.ChatColor;
+
+import java.util.ArrayList;
 
 public class TrueDamageArrow extends CustomArrow {
     private static Color color = Color.fromRGB(74, 10, 5);
     private String name = "True Damage Arrow";
+    private double damage = 12;
 
     public void onHitGround(Player shooter, Arrow arrow, Location location, BlockFace blockFace) {
         arrow.remove();
@@ -29,15 +33,21 @@ public class TrueDamageArrow extends CustomArrow {
         if (entity instanceof Player) {
             return 0;
         }
-        if (entity.getHealth() - 10 <= 0) {
+        if (entity.getHealth() - damage <= 0) {
             // entity.setHealth(0);
             return 999;
         }
-        entity.setHealth(entity.getHealth() - 10);
+        entity.setHealth(entity.getHealth() - damage);
         return 0;
     }
 
     public String getName() {
         return name;
+    }
+
+    public ArrayList<String> getLore() {
+        ArrayList<String> lore = new ArrayList<String>();
+        lore.add(ChatColor.WHITE + "Deals " + String.valueOf(damage) + " true damage");
+        return lore;
     }
 }

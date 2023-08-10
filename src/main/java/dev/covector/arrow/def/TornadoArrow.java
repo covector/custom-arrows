@@ -12,6 +12,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.bukkit.Particle;
 import org.bukkit.block.BlockFace;
+import org.bukkit.ChatColor;
+
+import java.util.ArrayList;
 
 import dev.covector.customarrows.CustomArrowsPlugin;
 
@@ -77,6 +80,13 @@ public class TornadoArrow extends CustomArrow {
 
     public String getName() {
         return name + " " + suffix;
+    }
+
+    public ArrayList<String> getLore() {
+        ArrayList<String> lore = new ArrayList<String>();
+        lore.add(ChatColor.WHITE + "Create a tornado when hit ground");
+        lore.add(ChatColor.GRAY + "Players will be pulled as well");
+        return lore;
     }
 
     private static boolean validTarget(Entity entity) {

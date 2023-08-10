@@ -44,6 +44,7 @@ public class GiveCommand implements CommandExecutor {
                     ItemMeta itemMeta = item.getItemMeta();
                     // itemMeta.setDisplayName(ChatColor.GOLD + "Custom Arrow" + ChatColor.GRAY + " (ID " + id + ")");
                     itemMeta.setDisplayName(ChatColor.GOLD + ArrowRegistry.getArrowType(id).getName());
+                    itemMeta.setLore(ArrowRegistry.getArrowType(id).getLore());
                     item.setItemMeta(itemMeta);
                     if (sender instanceof Player) {
                         Player player = (Player) sender;

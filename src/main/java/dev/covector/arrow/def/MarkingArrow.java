@@ -10,6 +10,9 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.block.BlockFace;
+import org.bukkit.ChatColor;
+
+import java.util.ArrayList;
 
 public class MarkingArrow extends CustomArrow {
     private static Color color = Color.fromRGB(255, 226, 79);
@@ -43,5 +46,11 @@ public class MarkingArrow extends CustomArrow {
     
     public String getName() {
         return name;
+    }
+
+    public ArrayList<String> getLore() {
+        ArrayList<String> lore = new ArrayList<String>();
+        lore.add(ChatColor.WHITE + "spectral arrow");
+        return lore;
     }
 }

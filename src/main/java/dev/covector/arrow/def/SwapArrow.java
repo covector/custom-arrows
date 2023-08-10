@@ -7,6 +7,9 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.Sound;
+import org.bukkit.ChatColor;
+
+import java.util.ArrayList;
 
 public class SwapArrow extends PierceAwareArrow {
     private static Color color = Color.PURPLE;
@@ -43,5 +46,11 @@ public class SwapArrow extends PierceAwareArrow {
 
     public String getName() {
         return name;
+    }
+
+    public ArrayList<String> getLore() {
+        ArrayList<String> lore = new ArrayList<String>();
+        lore.add(ChatColor.WHITE + "Swap positions with hit entity");
+        return lore;
     }
 }
