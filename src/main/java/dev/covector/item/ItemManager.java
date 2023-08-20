@@ -89,7 +89,9 @@ public class ItemManager {
         if (main != -1 && arrows.size() < slot) arrows.add(main);
         int off = getCustomArrowId(inv.getItemInOffHand());
         if (off != -1 && arrows.size() < slot) arrows.add(off);
+        int mainind = inv.getHeldItemSlot();
         for (int i = 0; i < 35; i++) {
+            if (i == mainind) continue;
             ItemStack item = inv.getItem(i);
             int slotId = getCustomArrowId(item);
             if (slotId != -1 && arrows.size() < slot) arrows.add(slotId);

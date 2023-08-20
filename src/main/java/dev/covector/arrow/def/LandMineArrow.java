@@ -29,13 +29,13 @@ public class LandMineArrow extends CustomArrow {
     private double blastRadius;
     private double blastRadiusSquare;
     private double damage;
-    private int setupDuration;
-    private int activeDuration;
+    private double setupDuration;
+    private double activeDuration;
     private int delayTick;
     private String suffix;
     private Random random = new Random();
 
-    public LandMineArrow(double triggerRadius, double blastRadius, double damage, int setupDuration, int activeDuration, int delayTick, String suffix) {
+    public LandMineArrow(double triggerRadius, double blastRadius, double damage, double setupDuration, double activeDuration, int delayTick, String suffix) {
         this.triggerRadius = triggerRadius;
         this.triggerRadiusSquare = triggerRadius * triggerRadius;
         this.blastRadius = blastRadius;
@@ -89,7 +89,8 @@ public class LandMineArrow extends CustomArrow {
                     }
 
                     for (Entity entity : location.getWorld().getNearbyEntities(location, triggerRadius, triggerRadius, triggerRadius)) {
-                        if ((entity instanceof LivingEntity || (entity instanceof Arrow && !(entity.getUniqueId().toString().equals(arrow.getUniqueId().toString()))))
+                        // if ((entity instanceof LivingEntity || (entity instanceof Arrow && !(entity.getUniqueId().toString().equals(arrow.getUniqueId().toString()))))
+                        if (entity instanceof LivingEntity
                             && !(entity instanceof ArmorStand)
                             && !(entity.getUniqueId().toString().equals(shooter.getUniqueId().toString()))) {
                             if (active) {
@@ -156,10 +157,11 @@ public class LandMineArrow extends CustomArrow {
     public ArrayList<String> getLore() {
         ArrayList<String> lore = new ArrayList<String>();
         lore.add(ChatColor.WHITE + "Set up a landmine");
-        lore.add(ChatColor.GRAY + "Setup time: " + String.valueOf(setupDuration/20D) + "s");
+        lore.add(ChatColor.GRAY + "Setup time: " + String.valueOf(setupDuration) + "s");
         lore.add(ChatColor.GRAY + "Any entity except self will deactivate mine during setup");
         lore.add(ChatColor.GRAY + "Mine will detonate " + String.valueOf(delayTick/20D) + "s after triggered by entity except self");
-        lore.add(ChatColor.GRAY + "Mine will deactivate after " + String.valueOf(activeDuration/20D) + "s");
+        lore.add(ChatColor.GRAY + "Mine will deactivate after " + String.valueOf(activeDuration) + "s");
+        lore.add(ChatColor.GRAY + "Deals " + String.valueOf(damage) + " amount of damage");
         return lore;
     }
 }

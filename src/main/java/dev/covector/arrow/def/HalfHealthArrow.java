@@ -35,7 +35,7 @@ public class HalfHealthArrow extends CustomArrow {
                 entity.setHealth(0.5 * maxhealth);
                 return 0;
             }
-            return Math.min(entity.getHealth() - 0.5 * maxhealth, damage * 3);
+            return Math.min(entity.getHealth() - 0.5 * maxhealth, damage * 3.3D);
         } else {
             entity.setHealth(0.5 * maxhealth);
             return 0;

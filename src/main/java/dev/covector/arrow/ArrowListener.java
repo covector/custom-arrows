@@ -7,12 +7,16 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.block.Action;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.entity.AbstractArrow.PickupStatus;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.inventory.EquipmentSlot;
 
 import org.bukkit.NamespacedKey;
 import org.bukkit.persistence.PersistentDataType;
@@ -106,5 +110,35 @@ public class ArrowListener implements Listener {
                 break;
             }
         }
+    }
+
+    @EventHandler
+    public void onArrowLeftClick(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+
+        // if ((event.getAction() != Action.RIGHT_CLICK_AIR) || !player.isSneaking()) {
+        //     return;
+        // }
+
+        if ((event.getAction() != Action.LEFT_CLICK_AIR)) {
+            return;
+        }
+
+        if (event.getHand() != EquipmentSlot.HAND) {
+            return;
+        }
+
+        ItemStack itemMain = player.getInventory().getItemInMainHand();
+
+        if (!ItemManager.isCustomArrow(itemMain)) {
+            return;
+        }
+
+        PlayerInventory inv = player.getInventory();
+        for (int i = inv.getHeldItemSlot(); i > 0; i--) {
+            player.getInventory().setItem(i, player.getInventory().getItem(i-1));
+        }
+        player.getInventory().setItem(0, itemMain);
+
     }
 }

@@ -22,7 +22,7 @@ public class DamageNearestArrow extends CustomArrow {
     private static Color color = Color.fromRGB(227, 227, 227);
     private static String name = "Damage Nearest Arrow";
     private NamespacedKey key;
-    private double radius = 2.5;
+    private double radius = 3.5;
 
     public DamageNearestArrow() {
         this.key = new NamespacedKey(CustomArrowsPlugin.plugin, "arrow-types");
@@ -51,7 +51,7 @@ public class DamageNearestArrow extends CustomArrow {
             LivingEntity livingEntity = (LivingEntity) entity;
 
             // get modified damage
-            double damage = arrow.getDamage() * 3;
+            double damage = arrow.getDamage() * 5D;
             for (int id : ids) {
                 if (ArrowRegistry.getArrowType(id) == this) { continue; }
                 double modDamage = ArrowRegistry.getArrowType(id).ModifyDamage(shooter, arrow, livingEntity, damage);
@@ -111,7 +111,7 @@ public class DamageNearestArrow extends CustomArrow {
 
     public ArrayList<String> getLore() {
         ArrayList<String> lore = new ArrayList<String>();
-        lore.add(ChatColor.WHITE + "Damage nearest entity within 2.5 radius");
+        lore.add(ChatColor.WHITE + "Damage nearest entity within " + String.valueOf(radius) + " radius");
         lore.add(ChatColor.GRAY + "when hit ground");
         lore.add(ChatColor.GRAY + "compatible with piercing level");
         lore.add(ChatColor.GRAY + "will trigger on hit entities of other arrows");

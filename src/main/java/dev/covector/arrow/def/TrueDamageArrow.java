@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class TrueDamageArrow extends CustomArrow {
     private static Color color = Color.fromRGB(74, 10, 5);
     private String name = "True Damage Arrow";
-    private double damage = 12;
+    private double trueDamage = 12;
 
     public void onHitGround(Player shooter, Arrow arrow, Location location, BlockFace blockFace) {
         arrow.remove();
@@ -30,14 +30,15 @@ public class TrueDamageArrow extends CustomArrow {
     }
 
     public double ModifyDamage(Player shooter, Arrow arrow, LivingEntity entity, double damage) {
+        double scaledDamage = damage * 1.2D;
         if (entity instanceof Player) {
             return 0;
         }
-        if (entity.getHealth() - damage <= 0) {
+        if (entity.getHealth() - scaledDamage <= 0) {
             // entity.setHealth(0);
             return 999;
         }
-        entity.setHealth(entity.getHealth() - damage);
+        entity.setHealth(entity.getHealth() - scaledDamage);
         return 0;
     }
 
@@ -47,7 +48,7 @@ public class TrueDamageArrow extends CustomArrow {
 
     public ArrayList<String> getLore() {
         ArrayList<String> lore = new ArrayList<String>();
-        lore.add(ChatColor.WHITE + "Deals " + String.valueOf(damage) + " true damage");
+        lore.add(ChatColor.WHITE + "Deals (1.2*original damage) of true damage");
         return lore;
     }
 }

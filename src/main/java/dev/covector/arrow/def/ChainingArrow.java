@@ -22,7 +22,7 @@ import dev.covector.customarrows.CustomArrowsPlugin;
 public class ChainingArrow extends CustomArrow {
     private static Color color = Color.fromRGB(245, 152, 66);
     private static String name = "Chaining Arrow";
-    private int delay = 12;
+    private int delay = 8;
 
     public void onHitGround(Player shooter, Arrow arrow, Location location, BlockFace blockFace) {
         arrow.remove();
@@ -63,7 +63,7 @@ public class ChainingArrow extends CustomArrow {
     public ArrayList<String> getLore() {
         ArrayList<String> lore = new ArrayList<String>();
         lore.add(ChatColor.WHITE + "Charge your crossbow after hit");
-        lore.add(ChatColor.GRAY + "Has 0.6s delay");
+        lore.add(ChatColor.GRAY + "Has 0.4s delay");
         return lore;
     }
 }

@@ -27,16 +27,22 @@ public class WallLaserArrow extends CustomArrow {
     private static Color color = Color.fromRGB(252, 25, 59);
     private static String name = "Wall Laser Arrow";
     private NamespacedKey key;
-    private int hitLimit = 3;
+    private NamespacedKey deactivateKey;
+    private int hitLimit = 5;
     // private double damage = 2;
 
     public WallLaserArrow() {
         this.key = new NamespacedKey(CustomArrowsPlugin.plugin, "arrow-types");
+        this.deactivateKey = new NamespacedKey(CustomArrowsPlugin.plugin, "deactivated-walllaser");
     }
 
     public void onHitGround(Player shooter, Arrow arrow, Location location, BlockFace blockFace) {
+        if (arrow.getPersistentDataContainer().has(deactivateKey, PersistentDataType.BYTE)) {
+            arrow.remove();
+            return;
+        }
         int[] ids = arrow.getPersistentDataContainer().get(key, PersistentDataType.INTEGER_ARRAY);
-        double damage = arrow.getDamage() * 20;
+        double damage = arrow.getDamage() * 25;
         Location hitEnd = null;
 
         // raycast entities from blockface
@@ -92,7 +98,7 @@ public class WallLaserArrow extends CustomArrow {
                 Location loc = lerp3D(i, location, hitEnd);
                 // loc.getWorld().spawnParticle(Particle.REDSTONE, loc, 1, new Particle.DustOptions(Color.FUCHSIA, 1));
                 loc.getWorld().spawnParticle(org.bukkit.Particle.SONIC_BOOM, loc, 1);
-                location.getWorld().playSound(location, Sound.ENTITY_WARDEN_SONIC_BOOM, 1, 1);
+                location.getWorld().playSound(location, Sound.ENTITY_WARDEN_SONIC_BOOM, 0.3F, 1F);
             }
 
             
@@ -129,6 +135,9 @@ public class WallLaserArrow extends CustomArrow {
     }
 
     public void onHitEntity(Player shooter, Arrow arrow, Entity entity) {
+        if (entity instanceof LivingEntity) {
+            arrow.getPersistentDataContainer().set(deactivateKey, PersistentDataType.BYTE, (byte) 1);
+        }
     }
 
     public Color getColor() {
