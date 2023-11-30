@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.CrossbowMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.BlockFace;
 import org.bukkit.ChatColor;
 
@@ -42,6 +43,7 @@ public class ChainingArrow extends CustomArrow {
                         bowMeta.setChargedProjectiles(Arrays.asList(new ItemStack(Material.ARROW, 1)));
                         crossBow.setItemMeta(bowMeta);
                     }
+                    shooter.getWorld().playSound(shooter.getLocation(), Sound.BLOCK_NOTE_BLOCK_XYLOPHONE, 1, 1);
                 }
             }
         }.runTaskLater(CustomArrowsPlugin.plugin, delay);
@@ -63,7 +65,7 @@ public class ChainingArrow extends CustomArrow {
     public ArrayList<String> getLore() {
         ArrayList<String> lore = new ArrayList<String>();
         lore.add(ChatColor.WHITE + "Charge your crossbow after hit");
-        lore.add(ChatColor.GRAY + "Has 0.4s delay");
+        lore.add(ChatColor.GRAY + "Has " + String.valueOf(delay/20D) + "s delay");
         return lore;
     }
 }

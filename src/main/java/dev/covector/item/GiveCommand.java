@@ -12,24 +12,37 @@ import org.bukkit.Material;
 import net.minecraft.nbt.CompoundTag;
 import org.bukkit.entity.Player;
 
+import dev.covector.customarrows.CustomArrowsPlugin;
 import dev.covector.customarrows.arrow.ArrowRegistry;
+import dev.covector.customarrows.arrow.CustomArrow;
 import dev.covector.customarrows.arrow.ParamTester;
 
 public class GiveCommand implements CommandExecutor {
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {  
         switch(args.length) {
             case 1:
-                if (args[0].equals("list")) {
+                if (args[0].toLowerCase().equals("list")) {
                     sender.sendMessage(ChatColor.GOLD + "Custom Arrows:");
                     for (int i = 0; i < ArrowRegistry.getArrowTypeCount(); i++) {
                         sender.sendMessage(ChatColor.GRAY + " - " + ChatColor.GOLD + ArrowRegistry.getArrowType(i).getName() + ChatColor.GRAY + " (ID " + i + ")");
                     }
                     return true;
                 }
+                if (args[0].toLowerCase().equals("quickswap")) {
+                    if (!(sender instanceof Player)) {
+                        sender.sendMessage(ChatColor.RED + "You must be a player to use this command.");
+                        return false;
+                    }
+                    boolean toggle;
+                    Player player = (Player) sender;
+                    toggle = CustomArrowsPlugin.arrowListener.toggleLeftClick((Player) sender);
+                    sender.sendMessage(ChatColor.GREEN + "Quick swapping " + (toggle ? "on" : "off") + ".");
+                    return true;
+                }
                 break;
             case 2:
-                if (args[0].equals("arrow")) {
+                if (args[0].toLowerCase().equals("arrow")) {
                     int id;
                     try {
                         id = Integer.parseInt(args[1]);
@@ -53,7 +66,7 @@ public class GiveCommand implements CommandExecutor {
                     }
                     return true;
                 }
-                if (args[0].equals("bow")) {
+                if (args[0].toLowerCase().equals("bow")) {
                     int slot;
                     try {
                         slot = Integer.parseInt(args[1]);
@@ -76,7 +89,7 @@ public class GiveCommand implements CommandExecutor {
                     }
                     return true;
                 }
-                if (args[0].equals("bind")) {
+                if (args[0].toLowerCase().equals("bind")) {
                     if (sender instanceof Player) {
                         int slot;
                         try {
@@ -96,9 +109,21 @@ public class GiveCommand implements CommandExecutor {
                     }
                     return true;
                 }
+                if (args[0].toLowerCase().equals("quickswap")) {
+                    if (!(sender instanceof Player)) {
+                        sender.sendMessage(ChatColor.RED + "You must be a player to use this command.");
+                        return false;
+                    }
+                    boolean toggle;
+                    Player player = (Player) sender;
+                    toggle = Boolean.parseBoolean(args[1]);
+                    toggle = CustomArrowsPlugin.arrowListener.toggleLeftClick((Player) sender, toggle);
+                    sender.sendMessage(ChatColor.GREEN + "Quick swappping " + (toggle ? "on" : "off") + ".");
+                    return true;
+                }
                 break;
             case 3:
-                if (args[0].equals("test")) {
+                if (args[0].toLowerCase().equals("test")) {
                     ParamTester.set(args[1], Integer.parseInt(args[2]));
                     return true;
                 }

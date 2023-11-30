@@ -11,6 +11,7 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.NamespacedKey;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.block.BlockFace;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.RayTraceResult;
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.Particle;
@@ -19,6 +20,7 @@ import org.bukkit.ChatColor;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.jar.Attributes.Name;
 import java.util.ArrayList;
 
 import dev.covector.customarrows.CustomArrowsPlugin;
@@ -29,14 +31,30 @@ public class WallLaserArrow extends CustomArrow {
     private NamespacedKey key;
     private NamespacedKey deactivateKey;
     private int hitLimit = 5;
+    private int maxBounce = 3;
+    private int bounceTickDelay = 20;
+    private NamespacedKey maxBounceKey;
     // private double damage = 2;
 
     public WallLaserArrow() {
         this.key = new NamespacedKey(CustomArrowsPlugin.plugin, "arrow-types");
         this.deactivateKey = new NamespacedKey(CustomArrowsPlugin.plugin, "deactivated-walllaser");
+        this.maxBounceKey = new NamespacedKey(CustomArrowsPlugin.plugin, "max-bounce");
     }
 
     public void onHitGround(Player shooter, Arrow arrow, Location location, BlockFace blockFace) {
+        // bounce limit
+        if (arrow.getPersistentDataContainer().has(maxBounceKey, PersistentDataType.INTEGER)) {
+            int bounceLeft = arrow.getPersistentDataContainer().get(maxBounceKey, PersistentDataType.INTEGER);
+            if (bounceLeft < 0) {
+                arrow.remove();
+                return;
+            }
+            arrow.getPersistentDataContainer().set(maxBounceKey, PersistentDataType.INTEGER, bounceLeft - 1);
+        } else {
+            arrow.getPersistentDataContainer().set(maxBounceKey, PersistentDataType.INTEGER, maxBounce);
+        }
+        
         if (arrow.getPersistentDataContainer().has(deactivateKey, PersistentDataType.BYTE)) {
             arrow.remove();
             return;
@@ -48,7 +66,14 @@ public class WallLaserArrow extends CustomArrow {
         // raycast entities from blockface
         Entity[] hitEntities = new Entity[hitLimit];
         for (int i = 0; i < hitLimit; i++) {
-            RayTraceResult entityray = shooter.getWorld().rayTraceEntities(location, blockFace.getDirection(), 50, 0.5, e -> (e instanceof LivingEntity && !(e instanceof ArmorStand || e instanceof Player || isInArray(hitEntities, e))));
+            RayTraceResult entityray = shooter.getWorld().rayTraceEntities(location, blockFace.getDirection(), 50, 0.5,
+                e -> (e instanceof LivingEntity &&
+                    !(e instanceof ArmorStand ||
+                    e instanceof Player ||
+                    isInArray(hitEntities, e) ||
+                    e.getUniqueId().toString().equals(arrow.getUniqueId().toString())
+                    ))
+            );
             if (entityray == null) {
                 break;
             }
@@ -84,10 +109,22 @@ public class WallLaserArrow extends CustomArrow {
                 Location hitLocation = blockray.getHitBlock().getLocation().add(0.5, 0.5, 0.5).add(blockray.getHitBlockFace().getDirection().multiply(.5));
                 hitEnd = hitLocation;
                 for (int id : ids) {
-                    if (ArrowRegistry.getArrowType(id) == this) { continue; }
-                    ArrowRegistry.getArrowType(id).onHitGround(shooter, arrow, hitLocation, blockray.getHitBlockFace());
+                    // if (ArrowRegistry.getArrowType(id) == this) { continue; }  // DO NOT COMMENT THIS OUT NO MATTER WHAT
+                    if (ArrowRegistry.getArrowType(id) != this) {
+                        ArrowRegistry.getArrowType(id).onHitGround(shooter, arrow, hitLocation, blockray.getHitBlockFace());
+                    } else {
+                        new BukkitRunnable() {
+                            public void run() {
+                                ArrowRegistry.getArrowType(id).onHitGround(shooter, arrow, hitLocation, blockray.getHitBlockFace());
+                            }
+                        }.runTaskLater(CustomArrowsPlugin.plugin, bounceTickDelay);
+                    }
                 }
+            } else {
+                arrow.remove();
             }
+        } else {
+            arrow.remove();
         }
 
         // spawn particles
@@ -98,13 +135,13 @@ public class WallLaserArrow extends CustomArrow {
                 Location loc = lerp3D(i, location, hitEnd);
                 // loc.getWorld().spawnParticle(Particle.REDSTONE, loc, 1, new Particle.DustOptions(Color.FUCHSIA, 1));
                 loc.getWorld().spawnParticle(org.bukkit.Particle.SONIC_BOOM, loc, 1);
-                location.getWorld().playSound(location, Sound.ENTITY_WARDEN_SONIC_BOOM, 0.3F, 1F);
+                location.getWorld().playSound(location, Sound.ENTITY_WARDEN_SONIC_BOOM, 0.2F, 1F);
             }
 
             
         }
 
-        arrow.remove();
+        // arrow.remove();
     }
 
     private boolean isInArray(Entity[] entities, Entity entity) {

@@ -12,15 +12,19 @@ import org.bukkit.NamespacedKey;
 public class CustomArrowsPlugin extends JavaPlugin
 {
     public static CustomArrowsPlugin plugin;
+    public static ArrowListener arrowListener;
+    public static BowListener bowListener;
 
     @Override
     public void onEnable() {
         plugin = this;
-        Bukkit.getPluginManager().registerEvents(new BowListener(), this);
+        bowListener = new BowListener();
+        Bukkit.getPluginManager().registerEvents(bowListener, this);
         ItemManager itemManager = new ItemManager();
         this.getCommand("ca").setExecutor(new GiveCommand());
         NamespacedKey key = new NamespacedKey(this, "arrow-types");
-        Bukkit.getPluginManager().registerEvents(new ArrowListener(key), this);
+        arrowListener = new ArrowListener(key);
+        Bukkit.getPluginManager().registerEvents(arrowListener, this);
         ArrowRegistry.register();
         getLogger().info("Custom Arrows Plugin Activated!");
     }

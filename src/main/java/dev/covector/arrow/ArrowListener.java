@@ -17,9 +17,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.entity.AbstractArrow.PickupStatus;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.EquipmentSlot;
-
 import org.bukkit.NamespacedKey;
 import org.bukkit.persistence.PersistentDataType;
+
+import java.util.HashSet;
 
 import dev.covector.customarrows.item.ItemManager;
 
@@ -112,6 +113,23 @@ public class ArrowListener implements Listener {
         }
     }
 
+    private HashSet<String> leftClickToggled = new HashSet<String>();
+    public boolean toggleLeftClick(Player player, boolean toggle) {
+        if (toggle) {
+            leftClickToggled.add(player.getUniqueId().toString());
+        } else {
+            leftClickToggled.remove(player.getUniqueId().toString());
+        }
+        return toggle;
+    }
+    public boolean toggleLeftClick(Player player) {
+        return toggleLeftClick(player, !isLeftClickToggled(player));
+    }
+
+    private boolean isLeftClickToggled(Player player) {
+        return leftClickToggled.contains(player.getUniqueId().toString());
+    }
+
     @EventHandler
     public void onArrowLeftClick(PlayerInteractEvent event) {
         Player player = event.getPlayer();
@@ -125,6 +143,10 @@ public class ArrowListener implements Listener {
         }
 
         if (event.getHand() != EquipmentSlot.HAND) {
+            return;
+        }
+
+        if (!isLeftClickToggled(player)) {
             return;
         }
 
