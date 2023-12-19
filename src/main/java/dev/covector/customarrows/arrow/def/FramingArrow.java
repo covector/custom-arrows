@@ -1,4 +1,4 @@
-package dev.covector.customarrows.arrow;
+package dev.covector.customarrows.arrow.def;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -19,6 +19,8 @@ import org.bukkit.entity.EntityType;
 import java.util.ArrayList;
 
 import dev.covector.customarrows.CustomArrowsPlugin;
+import dev.covector.customarrows.arrow.ArrowRegistry;
+import dev.covector.customarrows.arrow.CustomArrow;
 
 public class FramingArrow extends CustomArrow implements Listener {
     private static Color color = Color.fromRGB(58, 202, 207);

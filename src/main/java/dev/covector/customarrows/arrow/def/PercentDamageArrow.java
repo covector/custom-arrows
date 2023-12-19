@@ -1,4 +1,4 @@
-package dev.covector.customarrows.arrow;
+package dev.covector.customarrows.arrow.def;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -11,6 +11,8 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.ChatColor;
 
 import java.util.ArrayList;
+
+import dev.covector.customarrows.arrow.CustomArrow;
 
 public class PercentDamageArrow extends CustomArrow {
     private static Color color = Color.fromRGB(74, 10, 5);

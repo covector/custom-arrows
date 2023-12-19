@@ -1,4 +1,4 @@
-package dev.covector.customarrows.arrow;
+package dev.covector.customarrows.arrow.def;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -19,6 +19,7 @@ import java.util.Random;
 import java.util.ArrayList;
 
 import dev.covector.customarrows.CustomArrowsPlugin;
+import dev.covector.customarrows.arrow.CustomArrow;
 
 public class LandMineArrow extends CustomArrow {
     private static Color color = Color.fromRGB(54, 207, 74);

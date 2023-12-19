@@ -1,4 +1,4 @@
-package dev.covector.customarrows.arrow;
+package dev.covector.customarrows.arrow.def;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -9,6 +9,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.block.BlockFace;
 
 import java.util.HashMap;
+
+import dev.covector.customarrows.arrow.CustomArrow;
 
 public abstract class PierceAwareArrow extends CustomArrow {
     private HashMap<String, PierceEntityData> piercedEntities = new HashMap<String, PierceEntityData>();

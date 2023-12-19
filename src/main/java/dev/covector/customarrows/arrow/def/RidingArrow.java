@@ -1,4 +1,4 @@
-package dev.covector.customarrows.arrow;
+package dev.covector.customarrows.arrow.def;
 
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -10,6 +10,8 @@ import org.bukkit.ChatColor;
 
 import java.util.HashMap;
 import java.util.ArrayList;
+
+import dev.covector.customarrows.arrow.CustomArrow;
 
 public class RidingArrow extends PierceAwareArrow {
     private static Color color = Color.fromRGB(16, 16, 156);

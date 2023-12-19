@@ -2,6 +2,8 @@ package dev.covector.customarrows.arrow;
 
 import java.util.ArrayList;
 
+import dev.covector.customarrows.arrow.def.*;
+
 public class ArrowRegistry {
     private static ArrayList<CustomArrow> arrowTypes = new ArrayList<CustomArrow>();
 

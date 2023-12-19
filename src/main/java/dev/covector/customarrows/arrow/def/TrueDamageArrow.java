@@ -1,4 +1,4 @@
-package dev.covector.customarrows.arrow;
+package dev.covector.customarrows.arrow.def;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -13,9 +13,12 @@ import org.bukkit.ChatColor;
 
 import java.util.ArrayList;
 
-public class HalfHealthArrow extends CustomArrow {
+import dev.covector.customarrows.arrow.CustomArrow;
+
+public class TrueDamageArrow extends CustomArrow {
     private static Color color = Color.fromRGB(74, 10, 5);
-    private String name = "Half Health Arrow";
+    private String name = "True Damage Arrow";
+    private double trueDamage = 12;
 
     public void onHitGround(Player shooter, Arrow arrow, Location location, BlockFace blockFace) {
         arrow.remove();
@@ -29,17 +32,16 @@ public class HalfHealthArrow extends CustomArrow {
     }
 
     public double ModifyDamage(Player shooter, Arrow arrow, LivingEntity entity, double damage) {
-        double maxhealth = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
-        if (entity.getHealth() > 0.5 * maxhealth) {
-            if (entity instanceof Player) {
-                entity.setHealth(0.5 * maxhealth);
-                return 0;
-            }
-            return Math.min(entity.getHealth() - 0.5 * maxhealth, damage * 3.3D);
-        } else {
-            entity.setHealth(0.5 * maxhealth);
+        double scaledDamage = damage * 1.2D;
+        if (entity instanceof Player) {
             return 0;
         }
+        if (entity.getHealth() - scaledDamage <= 0) {
+            // entity.setHealth(0);
+            return 999;
+        }
+        entity.setHealth(entity.getHealth() - scaledDamage);
+        return 0;
     }
 
     public String getName() {
@@ -48,9 +50,7 @@ public class HalfHealthArrow extends CustomArrow {
 
     public ArrayList<String> getLore() {
         ArrayList<String> lore = new ArrayList<String>();
-        lore.add(ChatColor.WHITE + "Cut hit entity's health in half");
-        lore.add(ChatColor.GRAY + "Damage capped at 3x arrow damage");
-        lore.add(ChatColor.GRAY + "Can affect players");
+        lore.add(ChatColor.WHITE + "Deals (1.2*original damage) of true damage");
         return lore;
     }
 }

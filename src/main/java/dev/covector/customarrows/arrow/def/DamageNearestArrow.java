@@ -1,4 +1,4 @@
-package dev.covector.customarrows.arrow;
+package dev.covector.customarrows.arrow.def;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -17,6 +17,8 @@ import java.util.Collection;
 import java.util.ArrayList;
 
 import dev.covector.customarrows.CustomArrowsPlugin;
+import dev.covector.customarrows.arrow.ArrowRegistry;
+import dev.covector.customarrows.arrow.CustomArrow;
 
 public class DamageNearestArrow extends CustomArrow {
     private static Color color = Color.fromRGB(227, 227, 227);
