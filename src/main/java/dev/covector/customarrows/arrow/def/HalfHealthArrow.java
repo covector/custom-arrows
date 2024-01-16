@@ -37,7 +37,7 @@ public class HalfHealthArrow extends CustomArrow {
                 entity.setHealth(0.5 * maxhealth);
                 return 0;
             }
-            return Math.min(entity.getHealth() - 0.5 * maxhealth, damage * 3.3D);
+            return Math.min(entity.getHealth() - 0.5 * maxhealth, damage * 4.2D);
         } else {
             entity.setHealth(0.5 * maxhealth);
             return 0;
@@ -51,7 +51,7 @@ public class HalfHealthArrow extends CustomArrow {
     public ArrayList<String> getLore() {
         ArrayList<String> lore = new ArrayList<String>();
         lore.add(ChatColor.WHITE + "Cut hit entity's health in half");
-        lore.add(ChatColor.GRAY + "Damage capped at 3x arrow damage");
+        lore.add(ChatColor.GRAY + "Damage capped at 4.20x arrow damage");
         lore.add(ChatColor.GRAY + "Can affect players");
         return lore;
     }

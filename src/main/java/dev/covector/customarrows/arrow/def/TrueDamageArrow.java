@@ -32,7 +32,7 @@ public class TrueDamageArrow extends CustomArrow {
     }
 
     public double ModifyDamage(Player shooter, Arrow arrow, LivingEntity entity, double damage) {
-        double scaledDamage = damage * 1.2D;
+        double scaledDamage = damage * 1.5D;
         if (entity instanceof Player) {
             return 0;
         }
@@ -50,7 +50,7 @@ public class TrueDamageArrow extends CustomArrow {
 
     public ArrayList<String> getLore() {
         ArrayList<String> lore = new ArrayList<String>();
-        lore.add(ChatColor.WHITE + "Deals (1.2*original damage) of true damage");
+        lore.add(ChatColor.WHITE + "Deals (1.5*original damage) of true damage");
         return lore;
     }
 }

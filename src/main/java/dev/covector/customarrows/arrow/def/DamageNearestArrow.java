@@ -53,7 +53,7 @@ public class DamageNearestArrow extends CustomArrow {
             LivingEntity livingEntity = (LivingEntity) entity;
 
             // get modified damage
-            double damage = arrow.getDamage() * 5D;
+            double damage = arrow.getDamage() * 6.5D;
             for (int id : ids) {
                 if (ArrowRegistry.getArrowType(id) == this) { continue; }
                 double modDamage = ArrowRegistry.getArrowType(id).ModifyDamage(shooter, arrow, livingEntity, damage);

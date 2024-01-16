@@ -35,7 +35,7 @@ public class PercentDamageArrow extends CustomArrow {
     }
 
     public double ModifyDamage(Player shooter, Arrow arrow, LivingEntity entity, double damage) {
-        return Math.min(percent * entity.getHealth(), damage * 2);
+        return Math.min(percent * entity.getHealth(), damage * 2.5D);
     }
     
     public String getName() {
@@ -45,7 +45,7 @@ public class PercentDamageArrow extends CustomArrow {
     public ArrayList<String> getLore() {
         ArrayList<String> lore = new ArrayList<String>();
         lore.add(ChatColor.WHITE + "Deals " + String.valueOf(percent * 100) + "% of target's health");
-        lore.add(ChatColor.GRAY + "Damage capped at 2x arrow damage");
+        lore.add(ChatColor.GRAY + "Damage capped at 2.5x arrow damage");
         return lore;
     }
 }

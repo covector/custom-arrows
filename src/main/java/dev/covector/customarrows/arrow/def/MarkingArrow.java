@@ -18,6 +18,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.CrossbowMeta;
@@ -51,6 +52,15 @@ public class MarkingArrow extends CustomArrow implements AutoCloseable, Listener
             return;
         }
         LivingEntity livingEntity = (LivingEntity) entity;
+
+        if (livingEntity instanceof Player) {
+            return;
+        }
+
+        if (marked.contains(livingEntity.getUniqueId().toString())) {
+            return;
+        }
+        
         livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, duration * 20, 0));
         
         marked.add(livingEntity.getUniqueId().toString());
@@ -88,7 +98,16 @@ public class MarkingArrow extends CustomArrow implements AutoCloseable, Listener
     }
 
     @EventHandler (priority = EventPriority.HIGHEST)
-    public void onDamage(EntityDamageByEntityEvent event) {
+    public void onDamageByEntity(EntityDamageByEntityEvent event) {
+        modifyDamage(event);
+    }
+
+    @EventHandler (priority = EventPriority.HIGHEST)
+    public void onDamage(EntityDamageEvent event) {
+        modifyDamage(event);
+    }
+
+    private void modifyDamage(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof LivingEntity)) {
             return;
         }
@@ -100,6 +119,7 @@ public class MarkingArrow extends CustomArrow implements AutoCloseable, Listener
 
         event.setDamage(damageMultiplier * event.getDamage());
     }
+
 
     @Override
     public void close() {

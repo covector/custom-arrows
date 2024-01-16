@@ -49,10 +49,10 @@ public class LandMineArrow extends CustomArrow {
     }
 
     public void onHitGround(Player shooter, Arrow arrow, Location location, BlockFace blockFace) {
-        if (blockFace != BlockFace.UP) {
-            arrow.remove();
-            return;
-        }
+        // if (blockFace != BlockFace.UP) {
+        //     arrow.remove();
+        //     return;
+        // }
         double period = 10.0;
         int interval = 2;
         new BukkitRunnable() {

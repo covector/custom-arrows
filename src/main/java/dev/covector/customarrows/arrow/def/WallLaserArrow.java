@@ -62,13 +62,13 @@ public class WallLaserArrow extends CustomArrow {
             return;
         }
         int[] ids = arrow.getPersistentDataContainer().get(key, PersistentDataType.INTEGER_ARRAY);
-        double damage = arrow.getDamage() * 25;
+        double damage = arrow.getDamage() * 30;
         Location hitEnd = null;
 
         // raycast entities from blockface
         Entity[] hitEntities = new Entity[hitLimit];
         for (int i = 0; i < hitLimit; i++) {
-            RayTraceResult entityray = shooter.getWorld().rayTraceEntities(location, blockFace.getDirection(), 50, 0.5,
+            RayTraceResult entityray = shooter.getWorld().rayTraceEntities(location, blockFace.getDirection(), 50, 0.75,
                 e -> (e instanceof LivingEntity &&
                     !(e instanceof ArmorStand ||
                     e instanceof Player ||
