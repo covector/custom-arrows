@@ -1,22 +1,21 @@
 package dev.covector.customarrows.arrow.def;
 
-import org.bukkit.Bukkit;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.CrossbowMeta;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.BlockFace;
-import org.bukkit.ChatColor;
-
-import java.util.Arrays;
-import java.util.ArrayList;
+import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.CrossbowMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import dev.covector.customarrows.CustomArrowsPlugin;
 import dev.covector.customarrows.arrow.CustomArrow;

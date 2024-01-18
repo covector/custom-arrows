@@ -1,20 +1,15 @@
 package dev.covector.customarrows.item;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftItemStack;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.Material;
-import net.minecraft.nbt.CompoundTag;
-import org.bukkit.entity.Player;
 
 import dev.covector.customarrows.CustomArrowsPlugin;
 import dev.covector.customarrows.arrow.ArrowRegistry;
-import dev.covector.customarrows.arrow.CustomArrow;
 import dev.covector.customarrows.arrow.ParamTester;
 
 public class GiveCommand implements CommandExecutor {
@@ -36,8 +31,8 @@ public class GiveCommand implements CommandExecutor {
                     }
                     boolean toggle;
                     Player player = (Player) sender;
-                    toggle = CustomArrowsPlugin.arrowListener.toggleLeftClick((Player) sender);
-                    sender.sendMessage(ChatColor.GREEN + "Quick swapping " + (toggle ? "on" : "off") + ".");
+                    toggle = CustomArrowsPlugin.arrowListener.toggleLeftClick(player);
+                    player.sendMessage(ChatColor.GREEN + "Quick swapping " + (toggle ? "on" : "off") + ".");
                     return true;
                 }
                 break;
@@ -117,8 +112,8 @@ public class GiveCommand implements CommandExecutor {
                     boolean toggle;
                     Player player = (Player) sender;
                     toggle = Boolean.parseBoolean(args[1]);
-                    toggle = CustomArrowsPlugin.arrowListener.toggleLeftClick((Player) sender, toggle);
-                    sender.sendMessage(ChatColor.GREEN + "Quick swappping " + (toggle ? "on" : "off") + ".");
+                    toggle = CustomArrowsPlugin.arrowListener.toggleLeftClick(player, toggle);
+                    player.sendMessage(ChatColor.GREEN + "Quick swappping " + (toggle ? "on" : "off") + ".");
                     return true;
                 }
                 break;

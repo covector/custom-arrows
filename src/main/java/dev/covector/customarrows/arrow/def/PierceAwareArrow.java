@@ -1,14 +1,12 @@
 package dev.covector.customarrows.arrow.def;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Color;
+import java.util.HashMap;
+
 import org.bukkit.Location;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.block.BlockFace;
-
-import java.util.HashMap;
 
 import dev.covector.customarrows.arrow.CustomArrow;
 

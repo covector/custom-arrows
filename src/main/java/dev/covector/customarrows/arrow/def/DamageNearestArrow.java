@@ -1,20 +1,19 @@
 package dev.covector.customarrows.arrow.def;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Color;
-import org.bukkit.Location;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.NamespacedKey;
-import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.block.BlockFace;
-import org.bukkit.ChatColor;
-
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.ArrayList;
+
+import org.bukkit.ChatColor;
+import org.bukkit.Color;
+import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.persistence.PersistentDataType;
 
 import dev.covector.customarrows.CustomArrowsPlugin;
 import dev.covector.customarrows.arrow.ArrowRegistry;

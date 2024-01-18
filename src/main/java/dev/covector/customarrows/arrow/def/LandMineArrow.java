@@ -1,22 +1,21 @@
 package dev.covector.customarrows.arrow.def;
 
-import org.bukkit.Bukkit;
+import java.util.ArrayList;
+import java.util.Random;
+
+import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
-import org.bukkit.Particle;
-import org.bukkit.Sound;
-import org.bukkit.block.BlockFace;
-import org.bukkit.ChatColor;
-
-import java.util.Random;
-import java.util.ArrayList;
 
 import dev.covector.customarrows.CustomArrowsPlugin;
 import dev.covector.customarrows.arrow.CustomArrow;
@@ -26,9 +25,9 @@ public class LandMineArrow extends CustomArrow {
     private static String name = "Land Mine Arrow";
 
     private double triggerRadius;
-    private double triggerRadiusSquare;
+    // private double triggerRadiusSquare;
     private double blastRadius;
-    private double blastRadiusSquare;
+    // private double blastRadiusSquare;
     private double damage;
     private double setupDuration;
     private double activeDuration;
@@ -38,9 +37,9 @@ public class LandMineArrow extends CustomArrow {
 
     public LandMineArrow(double triggerRadius, double blastRadius, double damage, double setupDuration, double activeDuration, int delayTick, String suffix) {
         this.triggerRadius = triggerRadius;
-        this.triggerRadiusSquare = triggerRadius * triggerRadius;
+        // this.triggerRadiusSquare = triggerRadius * triggerRadius;
         this.blastRadius = blastRadius;
-        this.blastRadiusSquare = blastRadius * blastRadius;
+        // this.blastRadiusSquare = blastRadius * blastRadius;
         this.damage = damage;
         this.setupDuration = setupDuration;
         this.activeDuration = activeDuration;
@@ -53,7 +52,6 @@ public class LandMineArrow extends CustomArrow {
         //     arrow.remove();
         //     return;
         // }
-        double period = 10.0;
         int interval = 2;
         new BukkitRunnable() {
             int ti = 0;

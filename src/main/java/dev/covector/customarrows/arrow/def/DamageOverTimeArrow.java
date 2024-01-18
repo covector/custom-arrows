@@ -1,18 +1,17 @@
 package dev.covector.customarrows.arrow.def;
 
-import org.bukkit.Bukkit;
+import java.util.ArrayList;
+
+import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.block.BlockFace;
-import org.bukkit.ChatColor;
-
-import java.util.ArrayList;
 
 import dev.covector.customarrows.arrow.CustomArrow;
 

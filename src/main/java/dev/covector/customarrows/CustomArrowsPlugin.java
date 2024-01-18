@@ -1,13 +1,13 @@
 package dev.covector.customarrows;
 
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.plugin.Plugin;
-
-import dev.covector.customarrows.bow.*;
-import dev.covector.customarrows.arrow.*;
-import dev.covector.customarrows.item.*;
 import org.bukkit.NamespacedKey;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import dev.covector.customarrows.arrow.ArrowListener;
+import dev.covector.customarrows.arrow.ArrowRegistry;
+import dev.covector.customarrows.bow.BowListener;
+import dev.covector.customarrows.item.GiveCommand;
 
 public class CustomArrowsPlugin extends JavaPlugin
 {
@@ -20,7 +20,7 @@ public class CustomArrowsPlugin extends JavaPlugin
         plugin = this;
         bowListener = new BowListener();
         Bukkit.getPluginManager().registerEvents(bowListener, this);
-        ItemManager itemManager = new ItemManager();
+        // ItemManager itemManager = new ItemManager();
         this.getCommand("ca").setExecutor(new GiveCommand());
         NamespacedKey key = new NamespacedKey(this, "arrow-types");
         arrowListener = new ArrowListener(key);

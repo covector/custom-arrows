@@ -1,17 +1,15 @@
 package dev.covector.customarrows.arrow.def;
 
+import java.util.ArrayList;
+
+import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.Sound;
-import org.bukkit.ChatColor;
-
-import java.util.ArrayList;
-
-import dev.covector.customarrows.arrow.CustomArrow;
 
 public class SwapArrow extends PierceAwareArrow {
     private static Color color = Color.PURPLE;

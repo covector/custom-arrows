@@ -1,14 +1,12 @@
 package dev.covector.customarrows.arrow.def;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
@@ -19,17 +17,12 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.CrossbowMeta;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import dev.covector.customarrows.arrow.ArrowRegistry;
-import dev.covector.customarrows.arrow.CustomArrow;
 import dev.covector.customarrows.CustomArrowsPlugin;
+import dev.covector.customarrows.arrow.CustomArrow;
 
 public class MarkingArrow extends CustomArrow implements AutoCloseable, Listener {
     private static Color color = Color.fromRGB(255, 226, 79);
@@ -91,11 +84,11 @@ public class MarkingArrow extends CustomArrow implements AutoCloseable, Listener
         return lore;
     }
 
-    private boolean cleanIfCan(LivingEntity entity) {
-        return (entity.isDead() ||
-            entity.getHealth() <= 0 || 
-            !entity.hasPotionEffect(PotionEffectType.GLOWING));
-    }
+    // private boolean cleanIfCan(LivingEntity entity) {
+    //     return (entity.isDead() ||
+    //         entity.getHealth() <= 0 || 
+    //         !entity.hasPotionEffect(PotionEffectType.GLOWING));
+    // }
 
     @EventHandler (priority = EventPriority.HIGHEST)
     public void onDamageByEntity(EntityDamageByEntityEvent event) {

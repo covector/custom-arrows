@@ -1,24 +1,21 @@
 package dev.covector.customarrows.arrow.def;
 
-import org.bukkit.Bukkit;
+import java.util.ArrayList;
+
+import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.block.BlockFace;
-import org.bukkit.ChatColor;
-
-import java.util.ArrayList;
+import org.bukkit.entity.Player;
 
 import dev.covector.customarrows.arrow.CustomArrow;
 
 public class TrueDamageArrow extends CustomArrow {
     private static Color color = Color.fromRGB(74, 10, 5);
     private String name = "True Damage Arrow";
-    private double trueDamage = 12;
 
     public void onHitGround(Player shooter, Arrow arrow, Location location, BlockFace blockFace) {
         arrow.remove();

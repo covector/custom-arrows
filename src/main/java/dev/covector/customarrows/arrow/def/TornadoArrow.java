@@ -1,20 +1,19 @@
 package dev.covector.customarrows.arrow.def;
 
-import org.bukkit.Bukkit;
+import java.util.ArrayList;
+
+import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
+import org.bukkit.Particle;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
-import org.bukkit.Particle;
-import org.bukkit.block.BlockFace;
-import org.bukkit.ChatColor;
-
-import java.util.ArrayList;
 
 import dev.covector.customarrows.CustomArrowsPlugin;
 import dev.covector.customarrows.arrow.CustomArrow;
@@ -24,14 +23,14 @@ public class TornadoArrow extends CustomArrow {
     private static String name = "Tornado Arrow";
 
     private double radius;
-    private double radiusSquare;
+    // private double radiusSquare;
     private double strength;
     private int duration;
     private String suffix;
 
     public TornadoArrow(double radius, double strength, int duration, String suffix) {
         this.radius = radius;
-        this.radiusSquare = radius * radius;
+        // this.radiusSquare = radius * radius;
         this.strength = strength / 10;
         this.duration = duration;
         this.suffix = suffix;
