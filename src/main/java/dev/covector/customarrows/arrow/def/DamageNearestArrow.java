@@ -29,7 +29,7 @@ public class DamageNearestArrow extends CustomArrow {
         this.key = new NamespacedKey(CustomArrowsPlugin.plugin, "arrow-types");
     }
 
-    public void onHitGround(Player shooter, Arrow arrow, Location location, BlockFace blockFace) {
+    public void onHitGround(LivingEntity shooter, Arrow arrow, Location location, BlockFace blockFace) {
         Collection<Entity> entities = location.getWorld().getNearbyEntities(location, radius, radius, radius);
         EntityDistance[] entityDistances = new EntityDistance[entities.size()];
         int j = 0;
@@ -94,14 +94,14 @@ public class DamageNearestArrow extends CustomArrow {
         }
     }
 
-    public void onHitEntity(Player shooter, Arrow arrow, Entity entity) {
+    public void onHitEntity(LivingEntity shooter, Arrow arrow, Entity entity) {
     }
 
     public Color getColor() {
         return color;
     }
 
-    public double ModifyDamage(Player shooter, Arrow arrow, LivingEntity entity, double damage) {
+    public double ModifyDamage(LivingEntity shooter, Arrow arrow, LivingEntity entity, double damage) {
         return -1;
     }
 

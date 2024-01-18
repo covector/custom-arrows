@@ -9,7 +9,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 
 import dev.covector.customarrows.arrow.CustomArrow;
 
@@ -22,18 +21,18 @@ public class PercentDamageArrow extends CustomArrow {
         this.percent = percent;
     }
 
-    public void onHitGround(Player shooter, Arrow arrow, Location location, BlockFace blockFace) {
+    public void onHitGround(LivingEntity shooter, Arrow arrow, Location location, BlockFace blockFace) {
         arrow.remove();
     }
 
-    public void onHitEntity(Player shooter, Arrow arrow, Entity entity) {
+    public void onHitEntity(LivingEntity shooter, Arrow arrow, Entity entity) {
     }
 
     public Color getColor() {
         return color;
     }
 
-    public double ModifyDamage(Player shooter, Arrow arrow, LivingEntity entity, double damage) {
+    public double ModifyDamage(LivingEntity shooter, Arrow arrow, LivingEntity entity, double damage) {
         return Math.min(percent * entity.getHealth(), damage * 2.5D);
     }
     

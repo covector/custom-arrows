@@ -26,11 +26,11 @@ public class DamageOverTimeArrow extends CustomArrow {
         this.amplifier = amplifier;
     }
 
-    public void onHitGround(Player shooter, Arrow arrow, Location location, BlockFace blockFace) {
+    public void onHitGround(LivingEntity shooter, Arrow arrow, Location location, BlockFace blockFace) {
         arrow.remove();
     }
 
-    public void onHitEntity(Player shooter, Arrow arrow, Entity entity) {
+    public void onHitEntity(LivingEntity shooter, Arrow arrow, Entity entity) {
         if (!(entity instanceof LivingEntity) || entity instanceof Player) {
             return;
         }
@@ -42,7 +42,7 @@ public class DamageOverTimeArrow extends CustomArrow {
         return color;
     }
 
-    public double ModifyDamage(Player shooter, Arrow arrow, LivingEntity entity, double damage) {
+    public double ModifyDamage(LivingEntity shooter, Arrow arrow, LivingEntity entity, double damage) {
         return -1;
     }
     

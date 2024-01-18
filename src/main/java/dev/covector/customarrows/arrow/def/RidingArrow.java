@@ -8,14 +8,13 @@ import org.bukkit.Color;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 
 public class RidingArrow extends PierceAwareArrow {
     private static Color color = Color.fromRGB(16, 16, 156);
     private static String name = "Riding Arrow";
     private HashMap<String, LivingEntity> riders = new HashMap<String, LivingEntity>();
 
-    public void onAfterHitAll(Player shooter, Arrow arrow, Entity[] entities) {
+    public void onAfterHitAll(LivingEntity shooter, Arrow arrow, Entity[] entities) {
         if (entities.length == 0) return;
         int livingEntityCount = 0;
         int firstLivingEntityIndex = -1;
@@ -54,7 +53,7 @@ public class RidingArrow extends PierceAwareArrow {
         return color;
     }
 
-    public double ModifyDamage(Player shooter, Arrow arrow, LivingEntity entity, double damage) {
+    public double ModifyDamage(LivingEntity shooter, Arrow arrow, LivingEntity entity, double damage) {
         return -1;
     }
 

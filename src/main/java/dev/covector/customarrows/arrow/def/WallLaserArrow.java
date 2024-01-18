@@ -39,7 +39,7 @@ public class WallLaserArrow extends CustomArrow {
         this.maxBounceKey = new NamespacedKey(CustomArrowsPlugin.plugin, "max-bounce");
     }
 
-    public void onHitGround(Player shooter, Arrow arrow, Location location, BlockFace blockFace) {
+    public void onHitGround(LivingEntity shooter, Arrow arrow, Location location, BlockFace blockFace) {
         // bounce limit
         if (arrow.getPersistentDataContainer().has(maxBounceKey, PersistentDataType.INTEGER)) {
             int bounceLeft = arrow.getPersistentDataContainer().get(maxBounceKey, PersistentDataType.INTEGER);
@@ -168,7 +168,7 @@ public class WallLaserArrow extends CustomArrow {
         return (start + amount * (end - start));
     }
 
-    public void onHitEntity(Player shooter, Arrow arrow, Entity entity) {
+    public void onHitEntity(LivingEntity shooter, Arrow arrow, Entity entity) {
         if (entity instanceof LivingEntity) {
             arrow.getPersistentDataContainer().set(deactivateKey, PersistentDataType.BYTE, (byte) 1);
         }
@@ -178,7 +178,7 @@ public class WallLaserArrow extends CustomArrow {
         return color;
     }
 
-    public double ModifyDamage(Player shooter, Arrow arrow, LivingEntity entity, double damage) {
+    public double ModifyDamage(LivingEntity shooter, Arrow arrow, LivingEntity entity, double damage) {
         return -1;
     }
 

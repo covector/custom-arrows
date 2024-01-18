@@ -36,11 +36,11 @@ public class MarkingArrow extends CustomArrow implements AutoCloseable, Listener
         Bukkit.getPluginManager().registerEvents(this, CustomArrowsPlugin.plugin);
     }
 
-    public void onHitGround(Player shooter, Arrow arrow, Location location, BlockFace blockFace) {
+    public void onHitGround(LivingEntity shooter, Arrow arrow, Location location, BlockFace blockFace) {
         arrow.remove();
     }
 
-    public void onHitEntity(Player shooter, Arrow arrow, Entity entity) {
+    public void onHitEntity(LivingEntity shooter, Arrow arrow, Entity entity) {
         if (!(entity instanceof LivingEntity)) {
             return;
         }
@@ -68,7 +68,7 @@ public class MarkingArrow extends CustomArrow implements AutoCloseable, Listener
         return color;
     }
 
-    public double ModifyDamage(Player shooter, Arrow arrow, LivingEntity entity, double damage) {
+    public double ModifyDamage(LivingEntity shooter, Arrow arrow, LivingEntity entity, double damage) {
         return -1;
     }
 

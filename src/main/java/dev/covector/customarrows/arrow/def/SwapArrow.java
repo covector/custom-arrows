@@ -9,13 +9,12 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 
 public class SwapArrow extends PierceAwareArrow {
     private static Color color = Color.PURPLE;
     private static String name = "Swap Arrow";
 
-    public void onAfterHitAll(Player shooter, Arrow arrow, Entity[] entities) {
+    public void onAfterHitAll(LivingEntity shooter, Arrow arrow, Entity[] entities) {
         if (entities.length == 0) return;
         int firstLivingEntityIndex = -1;
         for (int i = 0; i < entities.length; i++) {
@@ -40,7 +39,7 @@ public class SwapArrow extends PierceAwareArrow {
         return color;
     }
 
-    public double ModifyDamage(Player shooter, Arrow arrow, LivingEntity entity, double damage) {
+    public double ModifyDamage(LivingEntity shooter, Arrow arrow, LivingEntity entity, double damage) {
         return -1;
     }
 

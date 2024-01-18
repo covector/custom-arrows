@@ -58,19 +58,19 @@ public class ArrowListener implements Listener {
         }
 
         Arrow arrow = (Arrow) event.getEntity();
-        if (!(arrow.getShooter() instanceof Player)) {
+        if (!(arrow.getShooter() instanceof LivingEntity)) {
             return;
         }
 
         if (arrow.getPersistentDataContainer().has(key, PersistentDataType.INTEGER_ARRAY)) {
             int[] ids = arrow.getPersistentDataContainer().get(key, PersistentDataType.INTEGER_ARRAY);
-            Player player = (Player) arrow.getShooter();
+            LivingEntity shooter = (LivingEntity) arrow.getShooter();
             for (int id : ids) {
                 // Bukkit.broadcastMessage("Arrow has id " + id);
                 if (event.getHitEntity() != null) {
-                    ArrowRegistry.getArrowType(id).onHitEntity(player, arrow, event.getHitEntity());
+                    ArrowRegistry.getArrowType(id).onHitEntity(shooter, arrow, event.getHitEntity());
                 } else if (event.getHitBlock() != null) {
-                    ArrowRegistry.getArrowType(id).onHitGround(player, arrow, event.getHitBlock().getLocation().add(0.5, 0.5, 0.5).add(event.getHitBlockFace().getDirection().multiply(.5)), event.getHitBlockFace());
+                    ArrowRegistry.getArrowType(id).onHitGround(shooter, arrow, event.getHitBlock().getLocation().add(0.5, 0.5, 0.5).add(event.getHitBlockFace().getDirection().multiply(.5)), event.getHitBlockFace());
                     // ArrowRegistry.getArrowType(id).onHitGround(player, arrow, arrow.getLocation());
                 }
             }
@@ -88,11 +88,11 @@ public class ArrowListener implements Listener {
         }
 
         Arrow arrow = (Arrow) event.getDamager();
-        if(!(arrow.getShooter() instanceof Player)){
+        if(!(arrow.getShooter() instanceof LivingEntity)){
             return;
         }
 
-        Player player = (Player) arrow.getShooter();
+        LivingEntity shooter = (LivingEntity) arrow.getShooter();
         if (!(event.getEntity() instanceof LivingEntity)) {
             return;
         }
@@ -101,7 +101,7 @@ public class ArrowListener implements Listener {
         if (arrow.getPersistentDataContainer().has(key, PersistentDataType.INTEGER_ARRAY)) {
             int[] ids = arrow.getPersistentDataContainer().get(key, PersistentDataType.INTEGER_ARRAY);
             for (int id : ids) {
-                double damage = ArrowRegistry.getArrowType(id).ModifyDamage(player, arrow, entity, event.getDamage());
+                double damage = ArrowRegistry.getArrowType(id).ModifyDamage(shooter, arrow, entity, event.getDamage());
                 if (damage < 0) {
                     continue;
                 }

@@ -6,14 +6,14 @@ import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.LivingEntity;
 
 import dev.covector.customarrows.arrow.CustomArrow;
 
 public abstract class PierceAwareArrow extends CustomArrow {
     private HashMap<String, PierceEntityData> piercedEntities = new HashMap<String, PierceEntityData>();
 
-    public void onHitGround(Player shooter, Arrow arrow, Location location, BlockFace blockFace) {
+    public void onHitGround(LivingEntity shooter, Arrow arrow, Location location, BlockFace blockFace) {
         if (piercedEntities.containsKey(arrow.getUniqueId().toString())) {
             PierceEntityData data = piercedEntities.get(arrow.getUniqueId().toString());
             onAfterHitAll(shooter, arrow, removeNull(data.piercedEntities));
@@ -24,7 +24,7 @@ public abstract class PierceAwareArrow extends CustomArrow {
         arrow.remove();
     }
 
-    public void onHitEntity(Player shooter, Arrow arrow, Entity entity) {
+    public void onHitEntity(LivingEntity shooter, Arrow arrow, Entity entity) {
         if (piercedEntities.containsKey(arrow.getUniqueId().toString())) {
             PierceEntityData data = piercedEntities.get(arrow.getUniqueId().toString());
             data.addPiercedEntity(entity);
@@ -41,7 +41,7 @@ public abstract class PierceAwareArrow extends CustomArrow {
         }
     }
 
-    public abstract void onAfterHitAll(Player shooter, Arrow arrow, Entity[] entity);
+    public abstract void onAfterHitAll(LivingEntity shooter, Arrow arrow, Entity[] entity);
 
     private Entity[] removeNull(Entity[] array) {
         int nullCount = 0;

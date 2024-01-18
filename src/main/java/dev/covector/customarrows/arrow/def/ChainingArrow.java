@@ -25,25 +25,29 @@ public class ChainingArrow extends CustomArrow {
     private static String name = "Chaining Arrow";
     private int delay = 8;
 
-    public void onHitGround(Player shooter, Arrow arrow, Location location, BlockFace blockFace) {
+    public void onHitGround(LivingEntity shooter, Arrow arrow, Location location, BlockFace blockFace) {
         arrow.remove();
     }
 
-    public void onHitEntity(Player shooter, Arrow arrow, Entity entity) {
+    public void onHitEntity(LivingEntity shooter, Arrow arrow, Entity entity) {
         if (!(entity instanceof LivingEntity) || entity instanceof Player) {
             return;
         }
+        if (!(shooter instanceof Player)) {
+            return;
+        }
+        Player player = (Player) shooter;
         new BukkitRunnable() {
             public void run() {
-                ItemStack crossBow = shooter.getInventory().getItemInMainHand();
-                crossBow = crossBow.getType() == Material.CROSSBOW ? crossBow : shooter.getInventory().getItemInOffHand();
+                ItemStack crossBow = player.getInventory().getItemInMainHand();
+                crossBow = crossBow.getType() == Material.CROSSBOW ? crossBow : player.getInventory().getItemInOffHand();
                 if (crossBow.getType() == Material.CROSSBOW) {
                     CrossbowMeta bowMeta = (CrossbowMeta)crossBow.getItemMeta();
                     if (!bowMeta.hasChargedProjectiles()) {
                         bowMeta.setChargedProjectiles(Arrays.asList(new ItemStack(Material.ARROW, 1)));
                         crossBow.setItemMeta(bowMeta);
                     }
-                    shooter.getWorld().playSound(shooter.getLocation(), Sound.BLOCK_NOTE_BLOCK_XYLOPHONE, 1, 1);
+                    player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_XYLOPHONE, 1, 1);
                 }
             }
         }.runTaskLater(CustomArrowsPlugin.plugin, delay);
@@ -53,7 +57,7 @@ public class ChainingArrow extends CustomArrow {
         return color;
     }
 
-    public double ModifyDamage(Player shooter, Arrow arrow, LivingEntity entity, double damage) {
+    public double ModifyDamage(LivingEntity shooter, Arrow arrow, LivingEntity entity, double damage) {
         return -1;
     }
 
