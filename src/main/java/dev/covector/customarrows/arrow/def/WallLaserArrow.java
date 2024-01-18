@@ -79,7 +79,12 @@ public class WallLaserArrow extends CustomArrow {
             hitEnd = entityray.getHitPosition().toLocation(shooter.getWorld());
 
             LivingEntity livingEntity = (LivingEntity) entity;
-            livingEntity.damage(damage, shooter);
+            
+            if (shooter instanceof Player) {
+                livingEntity.damage(damage, shooter);
+            } else {
+                livingEntity.damage(damage);
+            }
             
             // call onHitEntity
             for (int id : ids) {

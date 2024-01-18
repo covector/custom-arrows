@@ -61,7 +61,12 @@ public class DamageNearestArrow extends CustomArrow {
                     break;
                 }
             }
-            livingEntity.damage(damage, shooter);
+            
+            if (shooter instanceof Player) {
+                livingEntity.damage(damage, shooter);
+            } else {
+                livingEntity.damage(damage);
+            }
 
             // call hit entity event
             for (int id : ids) {
