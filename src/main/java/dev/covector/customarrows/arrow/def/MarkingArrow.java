@@ -90,13 +90,20 @@ public class MarkingArrow extends CustomArrow implements AutoCloseable, Listener
     //         !entity.hasPotionEffect(PotionEffectType.GLOWING));
     // }
 
-    @EventHandler (priority = EventPriority.HIGHEST)
-    public void onDamageByEntity(EntityDamageByEntityEvent event) {
-        modifyDamage(event);
-    }
+    // @EventHandler (priority = EventPriority.HIGHEST)
+    // public void onDamageByEntity(EntityDamageByEntityEvent event) {
+    //     if (event.getDamager() instanceof Arrow) { return; }
+    //     modifyDamage(event);
+    // }
 
     @EventHandler (priority = EventPriority.HIGHEST)
     public void onDamage(EntityDamageEvent event) {
+        if (event instanceof EntityDamageByEntityEvent) {
+            EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event;
+            if (e.getDamager() instanceof Arrow) {
+                return;
+            }
+        }
         modifyDamage(event);
     }
 
@@ -116,6 +123,7 @@ public class MarkingArrow extends CustomArrow implements AutoCloseable, Listener
 
     @Override
     public void close() {
-        EntityDamageByEntityEvent.getHandlerList().unregister(this);
+        // EntityDamageByEntityEvent.getHandlerList().unregister(this);
+        EntityDamageEvent.getHandlerList().unregister(this);
     }
 }
