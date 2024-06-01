@@ -6,6 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import dev.covector.customarrows.arrow.ArrowListener;
 import dev.covector.customarrows.arrow.ArrowRegistry;
+import dev.covector.customarrows.arrow.CustomArrow;
 import dev.covector.customarrows.bow.BowListener;
 import dev.covector.customarrows.item.GiveCommand;
 
@@ -33,4 +34,8 @@ public class CustomArrowsPlugin extends JavaPlugin
     public void onDisable() {
         getLogger().info("Custom Arrows Plugin Deactivated!");
     }
+
+    public void registerArrow(CustomArrow customArrow) {
+        ArrowRegistry.registerArrow(customArrow);
+    }   
 }

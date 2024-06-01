@@ -31,14 +31,14 @@ public class TrueDamageArrow extends CustomArrow {
     public double ModifyDamage(LivingEntity shooter, Arrow arrow, LivingEntity entity, double damage) {
         double scaledDamage = damage * 1.5D;
         if (entity instanceof Player) {
-            return 0;
+            return 0.1D;
         }
         if (entity.getHealth() - scaledDamage <= 0) {
             // entity.setHealth(0);
             return 999;
         }
         entity.setHealth(entity.getHealth() - scaledDamage);
-        return 0;
+        return 0.1D;
     }
 
     public String getName() {

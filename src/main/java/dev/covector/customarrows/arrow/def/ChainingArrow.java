@@ -23,7 +23,7 @@ import dev.covector.customarrows.arrow.CustomArrow;
 public class ChainingArrow extends CustomArrow {
     private static Color color = Color.fromRGB(245, 152, 66);
     private static String name = "Chaining Arrow";
-    private int delay = 8;
+    private int delay = 10;
 
     public void onHitGround(LivingEntity shooter, Arrow arrow, Location location, BlockFace blockFace) {
         arrow.remove();

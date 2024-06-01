@@ -30,6 +30,10 @@ public class ArrowRegistry {
         return arrowTypes.get(index);
     }
 
+    public static void registerArrow(CustomArrow customArrow) {
+        arrowTypes.add(customArrow);
+    }
+
     public static int getArrowTypeCount() {
         return arrowTypes.size();
     }
