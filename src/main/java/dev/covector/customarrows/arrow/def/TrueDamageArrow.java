@@ -17,18 +17,20 @@ public class TrueDamageArrow extends CustomArrow {
     private static Color color = Color.fromRGB(74, 10, 5);
     private String name = "True Damage Arrow";
 
-    public void onHitGround(LivingEntity shooter, Arrow arrow, Location location, BlockFace blockFace) {
-        arrow.remove();
+    public void onHitGround(GroundHitEvent event) {
+        event.arrow.remove();
     }
 
-    public void onHitEntity(LivingEntity shooter, Arrow arrow, Entity entity) {
+    public void onHitEntity(EntityHitEvent event) {
     }
 
     public Color getColor() {
         return color;
     }
 
-    public double ModifyDamage(LivingEntity shooter, Arrow arrow, LivingEntity entity, double damage) {
+    public double ModifyDamage(DamageEvent event) {
+        LivingEntity entity = event.entity;
+        double damage = event.damage;
         double scaledDamage = damage * 1.5D;
         if (entity instanceof Player) {
             return 0.1D;

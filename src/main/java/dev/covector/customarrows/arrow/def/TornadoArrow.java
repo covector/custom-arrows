@@ -11,6 +11,7 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -35,7 +36,9 @@ public class TornadoArrow extends CustomArrow {
         this.suffix = suffix;
     }
 
-    public void onHitGround(LivingEntity shooter, Arrow arrow, Location location, BlockFace blockFace) {
+    public void onHitGround(GroundHitEvent event) {
+        Arrow arrow = event.arrow;
+        Location location = event.location;
         double period = 10.0;
         int interval = 2;
         new BukkitRunnable() {
@@ -66,14 +69,14 @@ public class TornadoArrow extends CustomArrow {
 
     }
 
-    public void onHitEntity(LivingEntity shooter, Arrow arrow, Entity entity) {
+    public void onHitEntity(EntityHitEvent event) {
     }
 
     public Color getColor() {
         return color;
     }
 
-    public double ModifyDamage(LivingEntity shooter, Arrow arrow, LivingEntity entity, double damage) {
+    public double ModifyDamage(DamageEvent event) {
         return -1;
     }
 
@@ -89,6 +92,6 @@ public class TornadoArrow extends CustomArrow {
     }
 
     private static boolean validTarget(Entity entity) {
-        return entity instanceof LivingEntity && !(entity instanceof ArmorStand);
+        return entity instanceof LivingEntity && !(entity instanceof ArmorStand) && !(entity instanceof Player);
     }
 }

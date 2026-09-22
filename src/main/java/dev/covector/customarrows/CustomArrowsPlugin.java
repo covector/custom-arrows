@@ -2,6 +2,7 @@ package dev.covector.customarrows;
 
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
+import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import dev.covector.customarrows.arrow.ArrowListener;
@@ -16,22 +17,43 @@ public class CustomArrowsPlugin extends JavaPlugin
     public static ArrowListener arrowListener;
     public static BowListener bowListener;
 
+    // namespaces
+    public NamespacedKey arrowTypesKey = new NamespacedKey(this, "arrow-types");
+    public NamespacedKey piercedEntitiesKey = new NamespacedKey(this, "pierced-entities");
+
     @Override
     public void onEnable() {
+        // set singleton reference to this
         plugin = this;
+
+        // bow listener
         bowListener = new BowListener();
         Bukkit.getPluginManager().registerEvents(bowListener, this);
-        // ItemManager itemManager = new ItemManager();
+
+        // command handler
         this.getCommand("ca").setExecutor(new GiveCommand());
-        NamespacedKey key = new NamespacedKey(this, "arrow-types");
-        arrowListener = new ArrowListener(key);
+
+        // arrow listener
+        arrowListener = new ArrowListener();
         Bukkit.getPluginManager().registerEvents(arrowListener, this);
         ArrowRegistry.register();
+
+        // all registered
         getLogger().info("Custom Arrows Plugin Activated!");
     }
 
     @Override
     public void onDisable() {
+        // all event listener
+        HandlerList.unregisterAll(this);
+
+        // command listener
+        if (this.getCommand("ca") != null) {
+            this.getCommand("ca").setExecutor(null);
+            this.getCommand("ca").setTabCompleter(null); // Good practice if you added one later
+        }
+
+        // all unregistered
         getLogger().info("Custom Arrows Plugin Deactivated!");
     }
 

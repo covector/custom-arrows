@@ -25,11 +25,14 @@ public class ChainingArrow extends CustomArrow {
     private static String name = "Chaining Arrow";
     private int delay = 10;
 
-    public void onHitGround(LivingEntity shooter, Arrow arrow, Location location, BlockFace blockFace) {
-        arrow.remove();
+    public void onHitGround(GroundHitEvent event) {
+        event.arrow.remove();
     }
 
-    public void onHitEntity(LivingEntity shooter, Arrow arrow, Entity entity) {
+    public void onHitEntity(EntityHitEvent event) {
+        Entity entity = event.entity;
+        LivingEntity shooter = event.shooter;
+
         if (!(entity instanceof LivingEntity) || entity instanceof Player) {
             return;
         }
@@ -57,7 +60,7 @@ public class ChainingArrow extends CustomArrow {
         return color;
     }
 
-    public double ModifyDamage(LivingEntity shooter, Arrow arrow, LivingEntity entity, double damage) {
+    public double ModifyDamage(DamageEvent event) {
         return -1;
     }
 

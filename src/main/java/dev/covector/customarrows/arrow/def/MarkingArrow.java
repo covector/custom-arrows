@@ -2,6 +2,7 @@ package dev.covector.customarrows.arrow.def;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -10,6 +11,7 @@ import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,11 +19,15 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import dev.covector.customarrows.CustomArrowsPlugin;
+import dev.covector.customarrows.arrow.ArrowHelper;
+import dev.covector.customarrows.arrow.ArrowRegistry;
 import dev.covector.customarrows.arrow.CustomArrow;
 
 public class MarkingArrow extends CustomArrow implements AutoCloseable, Listener {
@@ -36,26 +42,33 @@ public class MarkingArrow extends CustomArrow implements AutoCloseable, Listener
         Bukkit.getPluginManager().registerEvents(this, CustomArrowsPlugin.plugin);
     }
 
-    public void onHitGround(LivingEntity shooter, Arrow arrow, Location location, BlockFace blockFace) {
-        arrow.remove();
+    public void onHitGround(GroundHitEvent event) {
+        event.arrow.remove();
     }
 
-    public void onHitEntity(LivingEntity shooter, Arrow arrow, Entity entity) {
+    public void onHitEntity(EntityHitEvent event) {
+        Entity entity = event.entity;
+
+        // check if is living etity
         if (!(entity instanceof LivingEntity)) {
             return;
         }
         LivingEntity livingEntity = (LivingEntity) entity;
 
+        // cannot mark players
         if (livingEntity instanceof Player) {
             return;
         }
 
+        // cannot remark marked
         if (marked.contains(livingEntity.getUniqueId().toString())) {
             return;
         }
         
+        // give glow effect
         livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, duration * 20, 0));
-        
+       
+        // schedule unmark
         marked.add(livingEntity.getUniqueId().toString());
         new BukkitRunnable() {
             public void run() {
@@ -68,7 +81,7 @@ public class MarkingArrow extends CustomArrow implements AutoCloseable, Listener
         return color;
     }
 
-    public double ModifyDamage(LivingEntity shooter, Arrow arrow, LivingEntity entity, double damage) {
+    public double ModifyDamage(DamageEvent event) {
         return -1;
     }
 
@@ -84,42 +97,69 @@ public class MarkingArrow extends CustomArrow implements AutoCloseable, Listener
         return lore;
     }
 
-    // private boolean cleanIfCan(LivingEntity entity) {
-    //     return (entity.isDead() ||
-    //         entity.getHealth() <= 0 || 
-    //         !entity.hasPotionEffect(PotionEffectType.GLOWING));
-    // }
-
-    // @EventHandler (priority = EventPriority.HIGHEST)
-    // public void onDamageByEntity(EntityDamageByEntityEvent event) {
-    //     if (event.getDamager() instanceof Arrow) { return; }
-    //     modifyDamage(event);
-    // }
-
+    // damage multiplier on marked
     @EventHandler (priority = EventPriority.HIGHEST)
     public void onDamage(EntityDamageEvent event) {
+        // check if damaged by arrow
         if (event instanceof EntityDamageByEntityEvent) {
             EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event;
             if (e.getDamager() instanceof Arrow) {
                 return;
             }
         }
-        modifyDamage(event);
-    }
 
-    private void modifyDamage(EntityDamageEvent event) {
+        // check if living entity is damaged
         if (!(event.getEntity() instanceof LivingEntity)) {
             return;
         }
-
         LivingEntity entity = (LivingEntity) event.getEntity();
+
+        // check if marked
         if (!(marked.contains(entity.getUniqueId().toString()))) {
             return;
         }
 
+        // damage multiplier 
         event.setDamage(damageMultiplier * event.getDamage());
     }
 
+    // sure hit for marked
+    @EventHandler (priority = EventPriority.HIGHEST)
+    public void onArrowHit(ProjectileHitEvent event) {
+        // check if is arrow
+        if (event.getEntityType() != EntityType.ARROW) {
+            return;
+        }
+
+        // check if shot by living entity
+        Arrow arrow = (Arrow) event.getEntity();
+        if (!(arrow.getShooter() instanceof LivingEntity)) {
+            return;
+        }
+        LivingEntity shooter = (LivingEntity) arrow.getShooter();
+
+        // if arrow only hit ground, transfer the hit to all marked entities
+        int piercedEntities = ArrowHelper.getPiercedEntityIDs(arrow).length;
+        if (piercedEntities == 0) {
+            if (ArrowHelper.isCustomArrow(arrow)) {
+                // loop through all custom arrows
+                int[] ids = arrow.getPersistentDataContainer().get(CustomArrowsPlugin.plugin.arrowTypesKey, PersistentDataType.INTEGER_ARRAY);
+                
+                for (String uuid: marked) {
+                    // add pierced entities 
+                    Entity entity = Bukkit.getEntity(UUID.fromString(uuid));
+                    ArrowHelper.addPiercedEntities(arrow, entity.getUniqueId());
+
+                    // trigger onHitEntity
+                    boolean arrowStopped = arrow.getPierceLevel() == 0;
+                    CustomArrow.EntityHitEvent entityHitEvent = new CustomArrow.EntityHitEvent(shooter, arrow, entity, arrowStopped);
+                    for (int id : ids) {
+                        ArrowRegistry.getArrowType(id).onHitEntity(entityHitEvent);
+                    }
+                }
+            }
+        }
+    }
 
     @Override
     public void close() {

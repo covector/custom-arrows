@@ -21,18 +21,22 @@ public class PercentDamageArrow extends CustomArrow {
         this.percent = percent;
     }
 
-    public void onHitGround(LivingEntity shooter, Arrow arrow, Location location, BlockFace blockFace) {
-        arrow.remove();
+    public void onHitGround(GroundHitEvent event) {
+        event.arrow.remove();
     }
 
-    public void onHitEntity(LivingEntity shooter, Arrow arrow, Entity entity) {
+    public void onHitEntity(EntityHitEvent event) {
+        // -1 health
+        event.shooter.setHealth(event.shooter.getHealth() - 1);
     }
 
     public Color getColor() {
         return color;
     }
 
-    public double ModifyDamage(LivingEntity shooter, Arrow arrow, LivingEntity entity, double damage) {
+    public double ModifyDamage(DamageEvent event) {
+        LivingEntity entity = event.entity;
+        double damage = event.damage;
         return Math.min(percent * entity.getHealth(), damage * 2.5D);
     }
     

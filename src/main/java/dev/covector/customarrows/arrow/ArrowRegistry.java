@@ -26,11 +26,17 @@ public class ArrowRegistry {
         arrowTypes.add(new LifeStealArrow()); // 15
     }
 
+    public static void registerAll() {
+        arrowTypes.clear();
+    }
+
     public static CustomArrow getArrowType(int index) {
         return arrowTypes.get(index);
     }
 
     public static void registerArrow(CustomArrow customArrow) {
+        int id = getArrowTypeCount();
+        customArrow.id = id;
         arrowTypes.add(customArrow);
     }
 

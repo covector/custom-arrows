@@ -16,31 +16,30 @@ import org.bukkit.event.Listener;
 import org.bukkit.persistence.PersistentDataType;
 
 import dev.covector.customarrows.CustomArrowsPlugin;
+import dev.covector.customarrows.arrow.ArrowHelper;
 import dev.covector.customarrows.arrow.CustomArrow;
 
 public class FramingArrow extends CustomArrow implements Listener {
     private static Color color = Color.fromRGB(58, 202, 207);
     private static String name = "Framing Arrow";
-    private NamespacedKey key;
     private int hitLimit = 8;
     private NamespacedKey maxDepthKey;
     private NamespacedKey playerInitArrowKey;
 
     public FramingArrow() {
-        this.key = new NamespacedKey(CustomArrowsPlugin.plugin, "arrow-types");
         this.maxDepthKey = new NamespacedKey(CustomArrowsPlugin.plugin, "max-depth");
         this.playerInitArrowKey = new NamespacedKey(CustomArrowsPlugin.plugin, "player-init-arrow");
     }
 
-    public void onHitGround(LivingEntity shooter, Arrow arrow, Location location, BlockFace blockFace) {
-        onHitGround(arrow);
+    public void onHitGround(GroundHitEvent event) {
+        event.arrow.remove();
     }
 
-    public void onHitGround(Arrow arrow) {
-        arrow.remove();
-    }
+    public void onHitEntity(EntityHitEvent event) {
+        Entity entity = event.entity;
+        LivingEntity shooter = event.shooter;
+        Arrow arrow = event.arrow;
 
-    public void onHitEntity(LivingEntity shooter, Arrow arrow, Entity entity) {
         if (!(entity instanceof LivingEntity)) {
             return;
         }
@@ -60,6 +59,7 @@ public class FramingArrow extends CustomArrow implements Listener {
             }
         }
 
+        // copy arrow attributes
         Arrow newArrow = livingEntity.launchProjectile(Arrow.class, livingEntity.getLocation().getDirection());
         newArrow.setPickupStatus(Arrow.PickupStatus.DISALLOWED);
         newArrow.setDamage(arrow.getDamage());
@@ -71,15 +71,15 @@ public class FramingArrow extends CustomArrow implements Listener {
         newArrow.getPersistentDataContainer().set(playerInitArrowKey, PersistentDataType.BYTE, (byte) 0);
 
         // inject abilities
-        int[] ids = arrow.getPersistentDataContainer().get(key, PersistentDataType.INTEGER_ARRAY);
-        newArrow.getPersistentDataContainer().set(key, PersistentDataType.INTEGER_ARRAY, ids);
+        int[] ids = ArrowHelper.getCustomArrowIDs(arrow);
+        ArrowHelper.setCustomArrowIDs(newArrow, ids);
     }
 
     public Color getColor() {
         return color;
     }
 
-    public double ModifyDamage(LivingEntity shooter, Arrow arrow, LivingEntity entity, double damage) {
+    public double ModifyDamage(DamageEvent event) {
         return -1;
     }
 

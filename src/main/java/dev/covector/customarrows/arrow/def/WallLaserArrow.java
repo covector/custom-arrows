@@ -1,6 +1,8 @@
 package dev.covector.customarrows.arrow.def;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
@@ -19,13 +21,13 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.RayTraceResult;
 
 import dev.covector.customarrows.CustomArrowsPlugin;
+import dev.covector.customarrows.arrow.ArrowHelper;
 import dev.covector.customarrows.arrow.ArrowRegistry;
 import dev.covector.customarrows.arrow.CustomArrow;
 
 public class WallLaserArrow extends CustomArrow {
     private static Color color = Color.fromRGB(252, 25, 59);
     private static String name = "Wall Laser Arrow";
-    private NamespacedKey key;
     private NamespacedKey deactivateKey;
     private int hitLimit = 5;
     private int maxBounce = 3;
@@ -34,12 +36,16 @@ public class WallLaserArrow extends CustomArrow {
     // private double damage = 2;
 
     public WallLaserArrow() {
-        this.key = new NamespacedKey(CustomArrowsPlugin.plugin, "arrow-types");
         this.deactivateKey = new NamespacedKey(CustomArrowsPlugin.plugin, "deactivated-walllaser");
         this.maxBounceKey = new NamespacedKey(CustomArrowsPlugin.plugin, "max-bounce");
     }
 
-    public void onHitGround(LivingEntity shooter, Arrow arrow, Location location, BlockFace blockFace) {
+    public void onHitGround(GroundHitEvent event) {
+        Location location = event.location;
+        Arrow arrow = event.arrow;
+        LivingEntity shooter = event.shooter;
+        BlockFace blockFace = event.blockFace;
+
         // bounce limit
         if (arrow.getPersistentDataContainer().has(maxBounceKey, PersistentDataType.INTEGER)) {
             int bounceLeft = arrow.getPersistentDataContainer().get(maxBounceKey, PersistentDataType.INTEGER);
@@ -56,12 +62,11 @@ public class WallLaserArrow extends CustomArrow {
             arrow.remove();
             return;
         }
-        int[] ids = arrow.getPersistentDataContainer().get(key, PersistentDataType.INTEGER_ARRAY);
         double damage = arrow.getDamage() * 30;
         Location hitEnd = null;
 
         // raycast entities from blockface
-        Entity[] hitEntities = new Entity[hitLimit];
+        List<Entity> hitEntities = new ArrayList<Entity>();
         for (int i = 0; i < hitLimit; i++) {
             RayTraceResult entityray = shooter.getWorld().rayTraceEntities(location, blockFace.getDirection(), 50, 0.75,
                 e -> (e instanceof LivingEntity &&
@@ -75,10 +80,13 @@ public class WallLaserArrow extends CustomArrow {
                 break;
             }
             Entity entity = entityray.getHitEntity();
-            hitEntities[i] = entity;
+            hitEntities.add(entity);
             hitEnd = entityray.getHitPosition().toLocation(shooter.getWorld());
+        }
 
-            LivingEntity livingEntity = (LivingEntity) entity;
+        // hit every entities
+        for (int i = 0; i < hitEntities.size(); i++) {
+            LivingEntity livingEntity = (LivingEntity) hitEntities.get(0);
             
             if (shooter instanceof Player) {
                 livingEntity.damage(damage, shooter);
@@ -86,38 +94,32 @@ public class WallLaserArrow extends CustomArrow {
                 livingEntity.damage(damage);
             }
             
-            // call onHitEntity
-            for (int id : ids) {
-                if (ArrowRegistry.getArrowType(id) == this) { continue; }
-                ArrowRegistry.getArrowType(id).onHitEntity(shooter, arrow, entity);
-            }
-        }
-        for (Entity entity : hitEntities) {
-            if (entity == null) {
-                break;
-            }
-            for (int id : ids) {
-                if (ArrowRegistry.getArrowType(id) instanceof PierceAwareArrow) {
-                    PierceAwareArrow pierceAwareArrow = (PierceAwareArrow) ArrowRegistry.getArrowType(id);
-                    pierceAwareArrow.onHitGround(shooter, arrow, location, blockFace);
-                }
-            }
+            // add into piercedEntities
+            ArrowHelper.addPiercedEntities(arrow, livingEntity.getUniqueId());
+
+            // call hit entity event
+            boolean arrowStopped = i == hitEntities.size();
+            EntityHitEvent entityHitEvent = new EntityHitEvent(shooter, arrow, livingEntity, arrowStopped);
+            ArrowHelper.triggerOnHitEntity(entityHitEvent, id);
+
         }
 
         // if no entity hit, raycast blocks from blockface
-        if (hitEntities[0] == null) {
+        if (hitEntities.size() == 0) {
             RayTraceResult blockray = shooter.getWorld().rayTraceBlocks(location, blockFace.getDirection(), 50, FluidCollisionMode.NEVER, true);
             if (blockray != null) {
                 Location hitLocation = blockray.getHitBlock().getLocation().add(0.5, 0.5, 0.5).add(blockray.getHitBlockFace().getDirection().multiply(.5));
                 hitEnd = hitLocation;
+                int[] ids = ArrowHelper.getCustomArrowIDs(arrow);
+                GroundHitEvent groundHitEvent = new GroundHitEvent(shooter, arrow, hitLocation, blockray.getHitBlockFace(), new UUID[0]);
                 for (int id : ids) {
                     // if (ArrowRegistry.getArrowType(id) == this) { continue; }  // DO NOT COMMENT THIS OUT NO MATTER WHAT
                     if (ArrowRegistry.getArrowType(id) != this) {
-                        ArrowRegistry.getArrowType(id).onHitGround(shooter, arrow, hitLocation, blockray.getHitBlockFace());
+                        ArrowRegistry.getArrowType(id).onHitGround(groundHitEvent);
                     } else {
                         new BukkitRunnable() {
                             public void run() {
-                                ArrowRegistry.getArrowType(id).onHitGround(shooter, arrow, hitLocation, blockray.getHitBlockFace());
+                                ArrowRegistry.getArrowType(id).onHitGround(groundHitEvent);
                             }
                         }.runTaskLater(CustomArrowsPlugin.plugin, bounceTickDelay);
                     }
@@ -146,7 +148,7 @@ public class WallLaserArrow extends CustomArrow {
         // arrow.remove();
     }
 
-    private boolean isInArray(Entity[] entities, Entity entity) {
+    private boolean isInArray(List<Entity> entities, Entity entity) {
         String uuid = entity.getUniqueId().toString();
         for (Entity e : entities) {
             if (e == null) {
@@ -173,7 +175,9 @@ public class WallLaserArrow extends CustomArrow {
         return (start + amount * (end - start));
     }
 
-    public void onHitEntity(LivingEntity shooter, Arrow arrow, Entity entity) {
+    public void onHitEntity(EntityHitEvent event) {
+        Entity entity = event.entity;
+        Arrow arrow = event.arrow;
         if (entity instanceof LivingEntity) {
             arrow.getPersistentDataContainer().set(deactivateKey, PersistentDataType.BYTE, (byte) 1);
         }
@@ -183,11 +187,10 @@ public class WallLaserArrow extends CustomArrow {
         return color;
     }
 
-    public double ModifyDamage(LivingEntity shooter, Arrow arrow, LivingEntity entity, double damage) {
+    public double ModifyDamage(DamageEvent event) {
         return -1;
     }
 
-    
     public String getName() {
         return name;
     }

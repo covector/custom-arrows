@@ -26,7 +26,7 @@ public class DamageOverTimeArrow extends CustomArrow {
         this.amplifier = amplifier;
     }
 
-    public void onHitGround(LivingEntity shooter, Arrow arrow, Location location, BlockFace blockFace) {
+    public void onHitGround(LivingEntity shooter, Arrow arrow, Location location, BlockFace blockFace, boolean hasHitEntities) {
         arrow.remove();
     }
 

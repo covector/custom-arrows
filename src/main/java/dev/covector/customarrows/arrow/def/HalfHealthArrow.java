@@ -18,18 +18,22 @@ public class HalfHealthArrow extends CustomArrow {
     private static Color color = Color.fromRGB(74, 10, 5);
     private String name = "Half Health Arrow";
 
-    public void onHitGround(LivingEntity shooter, Arrow arrow, Location location, BlockFace blockFace) {
-        arrow.remove();
+    public void onHitGround(GroundHitEvent event) {
+        event.arrow.remove();
     }
 
-    public void onHitEntity(LivingEntity shooter, Arrow arrow, Entity entity) {
+    public void onHitEntity(EntityHitEvent event) {
+        // -2 health
+        event.shooter.setHealth(event.shooter.getHealth() - 2);
     }
 
     public Color getColor() {
         return color;
     }
 
-    public double ModifyDamage(LivingEntity shooter, Arrow arrow, LivingEntity entity, double damage) {
+    public double ModifyDamage(DamageEvent event) {
+        LivingEntity entity = event.entity;
+        double damage = event.damage;
         double maxhealth = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
         if (entity.getHealth() > 0.5 * maxhealth) {
             if (entity instanceof Player) {

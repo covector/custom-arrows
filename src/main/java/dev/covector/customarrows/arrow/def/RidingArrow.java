@@ -2,6 +2,7 @@ package dev.covector.customarrows.arrow.def;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
@@ -9,31 +10,50 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 
-public class RidingArrow extends PierceAwareArrow {
+import dev.covector.customarrows.arrow.ArrowHelper;
+import dev.covector.customarrows.arrow.CustomArrow;
+import dev.covector.customarrows.arrow.CustomArrow.EntityHitEvent;
+import dev.covector.customarrows.arrow.CustomArrow.GroundHitEvent;
+
+public class RidingArrow extends CustomArrow {
     private static Color color = Color.fromRGB(16, 16, 156);
     private static String name = "Riding Arrow";
     private HashMap<String, LivingEntity> riders = new HashMap<String, LivingEntity>();
 
-    public void onAfterHitAll(LivingEntity shooter, Arrow arrow, Entity[] entities) {
-        if (entities.length == 0) return;
+    public void onHitEntity(EntityHitEvent event) {
+        // only run on last hit
+        if (event.arrowStopped) {
+            ride(event.shooter, event.arrow);
+        }
+    }
+
+    public void onHitGround(GroundHitEvent event) {
+        ride(event.shooter, event.arrow);
+        event.arrow.remove();
+    }
+    
+    public void ride(LivingEntity shooter, Arrow arrow) {
+        List<Entity> entities = ArrowHelper.getPiercedEntities(arrow);
+
+        if (entities.size() == 0) return;
         int livingEntityCount = 0;
         int firstLivingEntityIndex = -1;
-        for (int i = 0; i < entities.length; i++) {
-            // if (entities[i] instanceof LivingEntity && !(entities[i] instanceof Player)) {
-            if (entities[i] instanceof LivingEntity) {
+        for (int i = 0; i < entities.size(); i++) {
+            // if (entities.get(i) instanceof LivingEntity && !(entities.get(i) instanceof Player)) {
+            if (entities.get(i) instanceof LivingEntity) {
                 livingEntityCount++;
                 if (firstLivingEntityIndex == -1) firstLivingEntityIndex = i;
             }
         }
         if (livingEntityCount == 0) return;
         String shooterUUID = shooter.getUniqueId().toString();
-        Entity currentEntity = entities[firstLivingEntityIndex];
+        Entity currentEntity = entities.get(firstLivingEntityIndex);
         if (livingEntityCount != 1) {
-            for (int i = firstLivingEntityIndex + 1; i < entities.length; i++) {
-                // if (entities[i] instanceof LivingEntity && !(entities[i] instanceof Player)) {
-                if (entities[i] instanceof LivingEntity) {
-                    currentEntity.addPassenger(entities[i]);
-                    currentEntity = entities[i];
+            for (int i = firstLivingEntityIndex + 1; i < entities.size(); i++) {
+                // if (entities.get(i) instanceof LivingEntity && !(entities.get(i) instanceof Player)) {
+                if (entities.get(i) instanceof LivingEntity) {
+                    currentEntity.addPassenger(entities.get(i));
+                    currentEntity = entities.get(i);
                 }
             }
         }
@@ -53,7 +73,7 @@ public class RidingArrow extends PierceAwareArrow {
         return color;
     }
 
-    public double ModifyDamage(LivingEntity shooter, Arrow arrow, LivingEntity entity, double damage) {
+    public double ModifyDamage(DamageEvent event) {
         return -1;
     }
 

@@ -1,11 +1,13 @@
 package dev.covector.customarrows.arrow.def;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Random;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.block.BlockFace;
@@ -14,10 +16,13 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import dev.covector.customarrows.CustomArrowsPlugin;
+import dev.covector.customarrows.arrow.ArrowHelper;
+import dev.covector.customarrows.arrow.ArrowRegistry;
 import dev.covector.customarrows.arrow.CustomArrow;
 
 public class LandMineArrow extends CustomArrow {
@@ -34,6 +39,7 @@ public class LandMineArrow extends CustomArrow {
     private int delayTick;
     private String suffix;
     private Random random = new Random();
+    private NamespacedKey key;
 
     public LandMineArrow(double triggerRadius, double blastRadius, double damage, double setupDuration, double activeDuration, int delayTick, String suffix) {
         this.triggerRadius = triggerRadius;
@@ -45,13 +51,18 @@ public class LandMineArrow extends CustomArrow {
         this.activeDuration = activeDuration;
         this.delayTick = delayTick;
         this.suffix = suffix;
+        this.key = new NamespacedKey(CustomArrowsPlugin.plugin, "arrow-types");
     }
 
-    public void onHitGround(LivingEntity shooter, Arrow arrow, Location location, BlockFace blockFace) {
+    public void onHitGround(GroundHitEvent event) {
+        Location location = event.location;
+        Arrow arrow = event.arrow;
+        LivingEntity shooter = event.shooter;
         // if (blockFace != BlockFace.UP) {
         //     arrow.remove();
         //     return;
         // }
+        LandMineArrow tArrow = this;
         int interval = 2;
         new BukkitRunnable() {
             int ti = 0;
@@ -96,9 +107,9 @@ public class LandMineArrow extends CustomArrow {
                                 detonateTick = ti;
                             } else {
                                 // deactivate
-                                location.getWorld().spawnParticle(Particle.SMOKE_LARGE, location, 8);
-                                arrow.remove();
-                                cancel();
+                                // location.getWorld().spawnParticle(Particle.SMOKE_LARGE, location, 8);
+                                // arrow.remove();
+                                // cancel();
                             }
                             break;
                         }
@@ -110,10 +121,24 @@ public class LandMineArrow extends CustomArrow {
                         location.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, location, 64, 0, 0, 0, .3);
                         location.getWorld().playSound(location, Sound.ENTITY_GENERIC_EXPLODE, 2, 1);
 
-                        for (Entity entity : location.getWorld().getNearbyEntities(location, blastRadius, blastRadius, blastRadius))
-                            if (entity instanceof LivingEntity && !(entity instanceof ArmorStand) && !(entity instanceof Player)) {
-                                ((LivingEntity) entity).damage(damage);
-                                entity.setVelocity(new Vector(entity.getVelocity().getX(), 1, entity.getVelocity().getZ()));
+                        LivingEntity[] entities = location.getWorld().getNearbyEntities(location, blastRadius, blastRadius, blastRadius).stream()
+                            .filter(entity -> entity instanceof LivingEntity && !(entity instanceof ArmorStand) && !(entity instanceof Player))
+                            .toArray(LivingEntity[]::new);
+                        for (int i = 0; i < entities.length; i++) {
+                            LivingEntity entity = entities[i];
+
+                            // damage and kb based on how close to center of explosion
+                            double factor = 1 - entity.getLocation().distance(location) / blastRadius;
+                            entity.damage(damage * factor);
+                            entity.setVelocity(new Vector(entity.getVelocity().getX(), 1 * factor, entity.getVelocity().getZ()));
+                             
+                            // add into piercedEntities
+                            ArrowHelper.addPiercedEntities(arrow, entity.getUniqueId());
+
+                            // call hit entity event
+                            boolean arrowStopped = i == entities.length - 1;
+                            EntityHitEvent entityHitEvent = new EntityHitEvent(shooter, arrow, shooter, arrowStopped);
+                            ArrowHelper.triggerOnHitEntity(entityHitEvent, id);
                         }
 
                         arrow.remove();
@@ -138,14 +163,14 @@ public class LandMineArrow extends CustomArrow {
 
     }
 
-    public void onHitEntity(LivingEntity shooter, Arrow arrow, Entity entity) {
+    public void onHitEntity(EntityHitEvent event) {
     }
 
     public Color getColor() {
         return color;
     }
 
-    public double ModifyDamage(LivingEntity shooter, Arrow arrow, LivingEntity entity, double damage) {
+    public double ModifyDamage(DamageEvent event) {
         return -1;
     }
 
@@ -157,7 +182,7 @@ public class LandMineArrow extends CustomArrow {
         ArrayList<String> lore = new ArrayList<String>();
         lore.add(ChatColor.WHITE + "Set up a landmine");
         lore.add(ChatColor.GRAY + "Setup time: " + String.valueOf(setupDuration) + "s");
-        lore.add(ChatColor.GRAY + "Any entity except self will deactivate mine during setup");
+        // lore.add(ChatColor.GRAY + "Any entity except self will deactivate mine during setup");
         lore.add(ChatColor.GRAY + "Mine will detonate " + String.valueOf(delayTick/20D) + "s after triggered by entity except self");
         lore.add(ChatColor.GRAY + "Mine will deactivate after " + String.valueOf(activeDuration) + "s");
         lore.add(ChatColor.GRAY + "Deals " + String.valueOf(damage) + " amount of damage");

@@ -16,20 +16,21 @@ import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataType;
 
 import dev.covector.customarrows.CustomArrowsPlugin;
+import dev.covector.customarrows.arrow.ArrowHelper;
 import dev.covector.customarrows.arrow.ArrowRegistry;
 import dev.covector.customarrows.arrow.CustomArrow;
 
 public class DamageNearestArrow extends CustomArrow {
     private static Color color = Color.fromRGB(227, 227, 227);
     private static String name = "Damage Nearest Arrow";
-    private NamespacedKey key;
     private double radius = 3.5;
 
-    public DamageNearestArrow() {
-        this.key = new NamespacedKey(CustomArrowsPlugin.plugin, "arrow-types");
-    }
+    public void onHitGround(GroundHitEvent event) {
+        Location location = event.location;
+        Arrow arrow = event.arrow;
+        LivingEntity shooter = event.shooter;
 
-    public void onHitGround(LivingEntity shooter, Arrow arrow, Location location, BlockFace blockFace) {
+        // sort nearest entities
         Collection<Entity> entities = location.getWorld().getNearbyEntities(location, radius, radius, radius);
         EntityDistance[] entityDistances = new EntityDistance[entities.size()];
         int j = 0;
@@ -41,9 +42,9 @@ public class DamageNearestArrow extends CustomArrow {
             return Double.compare(a.getDistance(), b.getDistance());
         });
 
-        int[] ids = arrow.getPersistentDataContainer().get(key, PersistentDataType.INTEGER_ARRAY);
-        int canPiece = arrow.getPierceLevel() + 1;
-        for (int i = 0; i < entityDistances.length && canPiece > 0; i++) {
+        // convert remaining piercing into damage nearest
+        int canPierce = arrow.getPierceLevel() + 1;
+        for (int i = 0; i < entityDistances.length && canPierce > 0; i++) {
             Entity entity = entityDistances[i].entity;
             if (!(entity instanceof LivingEntity) || entity instanceof Player) {
                 continue;
@@ -53,33 +54,25 @@ public class DamageNearestArrow extends CustomArrow {
 
             // get modified damage
             double damage = arrow.getDamage() * 6.5D;
-            for (int id : ids) {
-                if (ArrowRegistry.getArrowType(id) == this) { continue; }
-                double modDamage = ArrowRegistry.getArrowType(id).ModifyDamage(shooter, arrow, livingEntity, damage);
-                if (modDamage != -1) {
-                    damage = modDamage;
-                    break;
-                }
-            }
+            DamageEvent damageEvent = new DamageEvent(shooter, arrow, livingEntity, damage);
+            damage = ArrowHelper.calculateDamage(damageEvent, id);
             
+            // set damaged by player
             if (shooter instanceof Player) {
                 livingEntity.damage(damage, shooter);
             } else {
                 livingEntity.damage(damage);
             }
 
+            // add into piercedEntities
+            ArrowHelper.addPiercedEntities(arrow, livingEntity.getUniqueId());
+
             // call hit entity event
-            for (int id : ids) {
-                if (ArrowRegistry.getArrowType(id) == this) { continue; }
-                ArrowRegistry.getArrowType(id).onHitEntity(shooter, arrow, entity);
-            }
-            canPiece--;
-        }
-        for (int id : ids) {
-            if (ArrowRegistry.getArrowType(id) instanceof PierceAwareArrow) {
-                PierceAwareArrow pierceAwareArrow = (PierceAwareArrow) ArrowRegistry.getArrowType(id);
-                pierceAwareArrow.onHitGround(shooter, arrow, location, blockFace);
-            }
+            boolean arrowStopped = i >= entityDistances.length || canPierce <= 1;
+            EntityHitEvent entityHitEvent = new EntityHitEvent(shooter, arrow, livingEntity, arrowStopped);
+            ArrowHelper.triggerOnHitEntity(entityHitEvent, id);
+
+            canPierce--;
         }
 
         arrow.remove();
@@ -99,14 +92,14 @@ public class DamageNearestArrow extends CustomArrow {
         }
     }
 
-    public void onHitEntity(LivingEntity shooter, Arrow arrow, Entity entity) {
+    public void onHitEntity(EntityHitEvent event) {
     }
 
     public Color getColor() {
         return color;
     }
 
-    public double ModifyDamage(LivingEntity shooter, Arrow arrow, LivingEntity entity, double damage) {
+    public double ModifyDamage(DamageEvent event) {
         return -1;
     }
 
