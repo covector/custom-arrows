@@ -127,14 +127,18 @@ public class LandMineArrow extends CustomArrow {
                         for (int i = 0; i < entities.length; i++) {
                             LivingEntity entity = entities[i];
 
-                            // damage and kb based on how close to center of explosion
-                            double factor = 1 - entity.getLocation().distance(location) / blastRadius;
-                            entity.damage(damage * factor);
-                            entity.setVelocity(new Vector(entity.getVelocity().getX(), 1 * factor, entity.getVelocity().getZ()));
-                             
                             // add into piercedEntities
                             ArrowHelper.addPiercedEntities(arrow, entity.getUniqueId());
 
+                            // damage and kb based on how close to center of explosion
+                            double factor = 1 - entity.getLocation().distance(location) / blastRadius;
+                            if (shooter instanceof Player) {
+                                entity.damage(damage * factor, shooter);
+                            } else {
+                                entity.damage(damage * factor);
+                            }
+                            entity.setVelocity(new Vector(entity.getVelocity().getX(), 1 * factor, entity.getVelocity().getZ()));
+                             
                             // call hit entity event
                             boolean arrowStopped = i == entities.length - 1;
                             EntityHitEvent entityHitEvent = new EntityHitEvent(shooter, arrow, shooter, arrowStopped);
@@ -176,6 +180,10 @@ public class LandMineArrow extends CustomArrow {
 
     public String getName() {
         return name + " " + suffix;
+    }
+
+    public boolean removeOnHitGround() {
+        return false;
     }
 
     public ArrayList<String> getLore() {

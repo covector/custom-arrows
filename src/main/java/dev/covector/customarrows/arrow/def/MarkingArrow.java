@@ -43,7 +43,6 @@ public class MarkingArrow extends CustomArrow implements AutoCloseable, Listener
     }
 
     public void onHitGround(GroundHitEvent event) {
-        event.arrow.remove();
     }
 
     public void onHitEntity(EntityHitEvent event) {
@@ -85,6 +84,9 @@ public class MarkingArrow extends CustomArrow implements AutoCloseable, Listener
         return -1;
     }
 
+    public boolean removeOnHitGround() {
+        return true;
+    }
     
     public String getName() {
         return name;

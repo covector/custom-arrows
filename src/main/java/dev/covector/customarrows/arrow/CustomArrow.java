@@ -18,6 +18,7 @@ public abstract class CustomArrow {
     public abstract Color getColor();
     public abstract String getName();
     public abstract ArrayList<String> getLore();
+    public abstract boolean removeOnHitGround();
 
     public static class GroundHitEvent {
         public LivingEntity shooter;

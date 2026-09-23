@@ -27,7 +27,6 @@ public class SwapArrow extends CustomArrow {
 
     public void onHitGround(GroundHitEvent event) {
         swap(event.shooter, event.arrow);
-        event.arrow.remove();
     }
 
     protected void swap(LivingEntity shooter, Arrow arrow) {
@@ -62,6 +61,10 @@ public class SwapArrow extends CustomArrow {
 
     public double ModifyDamage(DamageEvent event) {
         return -1;
+    }
+
+    public boolean removeOnHitGround() {
+        return true;
     }
 
     public String getName() {

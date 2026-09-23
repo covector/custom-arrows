@@ -97,6 +97,11 @@ public class ArrowListener implements Listener {
                 for (int id : ids) {
                     ArrowRegistry.getArrowType(id).onHitGround(groundHitEvent);
                 }
+                
+                // remove arrow if needed
+                if (ArrowHelper.needsRemove(arrow)) {
+                    arrow.remove();
+                }
             }
         }
     }

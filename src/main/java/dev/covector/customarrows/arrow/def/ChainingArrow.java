@@ -26,7 +26,6 @@ public class ChainingArrow extends CustomArrow {
     private int delay = 10;
 
     public void onHitGround(GroundHitEvent event) {
-        event.arrow.remove();
     }
 
     public void onHitEntity(EntityHitEvent event) {
@@ -64,6 +63,9 @@ public class ChainingArrow extends CustomArrow {
         return -1;
     }
 
+    public boolean removeOnHitGround() {
+        return true;
+    }
     
     public String getName() {
         return name;

@@ -51,6 +51,9 @@ public class DamageNearestArrow extends CustomArrow {
             }
 
             LivingEntity livingEntity = (LivingEntity) entity;
+            
+            // add into piercedEntities
+            ArrowHelper.addPiercedEntities(arrow, livingEntity.getUniqueId());
 
             // get modified damage
             double damage = arrow.getDamage() * 6.5D;
@@ -64,9 +67,6 @@ public class DamageNearestArrow extends CustomArrow {
                 livingEntity.damage(damage);
             }
 
-            // add into piercedEntities
-            ArrowHelper.addPiercedEntities(arrow, livingEntity.getUniqueId());
-
             // call hit entity event
             boolean arrowStopped = i >= entityDistances.length || canPierce <= 1;
             EntityHitEvent entityHitEvent = new EntityHitEvent(shooter, arrow, livingEntity, arrowStopped);
@@ -74,8 +74,6 @@ public class DamageNearestArrow extends CustomArrow {
 
             canPierce--;
         }
-
-        arrow.remove();
     }
 
     class EntityDistance {
@@ -103,6 +101,9 @@ public class DamageNearestArrow extends CustomArrow {
         return -1;
     }
 
+    public boolean removeOnHitGround() {
+        return true;
+    }
     
     public String getName() {
         return name;

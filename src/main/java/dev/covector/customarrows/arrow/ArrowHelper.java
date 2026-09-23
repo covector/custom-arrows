@@ -89,4 +89,19 @@ public class ArrowHelper {
         newUuids[newUuids.length - 1] = entity;
         arrow.getPersistentDataContainer().set(CustomArrowsPlugin.plugin.piercedEntitiesKey, UUIDArrayDataType.INSTANCE, newUuids);
     }
+
+    public static void resetPiercedEntities(Arrow arrow) {
+        arrow.getPersistentDataContainer().set(CustomArrowsPlugin.plugin.piercedEntitiesKey, UUIDArrayDataType.INSTANCE, new UUID[0]);
+    }
+
+    public static boolean needsRemove(Arrow arrow) {
+        int[] ids = getCustomArrowIDs(arrow);
+        for (int id : ids) {
+            if (!ArrowRegistry.getArrowType(id).removeOnHitGround()) {
+                // don't remove if any of the arrow doesn't want
+                return false;
+            }
+        }
+        return true;
+    }
 }

@@ -19,7 +19,6 @@ public class HalfHealthArrow extends CustomArrow {
     private String name = "Half Health Arrow";
 
     public void onHitGround(GroundHitEvent event) {
-        event.arrow.remove();
     }
 
     public void onHitEntity(EntityHitEvent event) {
@@ -45,6 +44,10 @@ public class HalfHealthArrow extends CustomArrow {
             entity.setHealth(0.5 * maxhealth);
             return 0;
         }
+    }
+
+    public boolean removeOnHitGround() {
+        return true;
     }
 
     public String getName() {

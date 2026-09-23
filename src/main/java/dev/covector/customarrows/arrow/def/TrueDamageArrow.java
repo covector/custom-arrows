@@ -18,7 +18,6 @@ public class TrueDamageArrow extends CustomArrow {
     private String name = "True Damage Arrow";
 
     public void onHitGround(GroundHitEvent event) {
-        event.arrow.remove();
     }
 
     public void onHitEntity(EntityHitEvent event) {
@@ -41,6 +40,10 @@ public class TrueDamageArrow extends CustomArrow {
         }
         entity.setHealth(entity.getHealth() - scaledDamage);
         return 0.1D;
+    }
+
+    public boolean removeOnHitGround() {
+        return true;
     }
 
     public String getName() {

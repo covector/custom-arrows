@@ -191,6 +191,10 @@ public class WallLaserArrow extends CustomArrow {
         return -1;
     }
 
+    public boolean removeOnHitGround() {
+        return false;
+    }
+
     public String getName() {
         return name;
     }

@@ -24,6 +24,7 @@ public class ArrowRegistry {
         arrowTypes.add(new RidingArrow()); // 13
         arrowTypes.add(new WallLaserArrow()); // 14
         arrowTypes.add(new LifeStealArrow()); // 15
+        arrowTypes.add(new EarthquakeArrow()); // 16
     }
 
     public static void registerAll() {

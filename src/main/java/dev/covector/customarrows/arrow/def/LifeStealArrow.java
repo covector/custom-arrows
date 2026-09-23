@@ -17,7 +17,6 @@ public class LifeStealArrow extends CustomArrow {
     private static String name = "Life Steal Arrow";
 
     public void onHitGround(GroundHitEvent event) {
-        event.arrow.remove();
     }
 
     public void onHitEntity(EntityHitEvent event) {
@@ -44,6 +43,10 @@ public class LifeStealArrow extends CustomArrow {
 
     public double ModifyDamage(DamageEvent event) {
         return -1;
+    }
+
+    public boolean removeOnHitGround() {
+        return true;
     }
 
     public String getName() {

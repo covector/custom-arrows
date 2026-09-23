@@ -32,7 +32,6 @@ public class FramingArrow extends CustomArrow implements Listener {
     }
 
     public void onHitGround(GroundHitEvent event) {
-        event.arrow.remove();
     }
 
     public void onHitEntity(EntityHitEvent event) {
@@ -83,6 +82,9 @@ public class FramingArrow extends CustomArrow implements Listener {
         return -1;
     }
 
+    public boolean removeOnHitGround() {
+        return true;
+    }
     
     public String getName() {
         return name;

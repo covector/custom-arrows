@@ -22,7 +22,6 @@ public class PercentDamageArrow extends CustomArrow {
     }
 
     public void onHitGround(GroundHitEvent event) {
-        event.arrow.remove();
     }
 
     public void onHitEntity(EntityHitEvent event) {
@@ -38,6 +37,10 @@ public class PercentDamageArrow extends CustomArrow {
         LivingEntity entity = event.entity;
         double damage = event.damage;
         return Math.min(percent * entity.getHealth(), damage * 2.5D);
+    }
+
+    public boolean removeOnHitGround() {
+        return true;
     }
     
     public String getName() {
