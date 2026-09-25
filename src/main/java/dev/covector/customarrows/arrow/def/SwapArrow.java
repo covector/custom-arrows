@@ -20,7 +20,6 @@ public class SwapArrow extends CustomArrow {
     private static String name = "Swap Arrow";
 
     public void onHitEntity(EntityHitEvent event) {
-        Bukkit.broadcastMessage("last hit" + (event.arrowStopped ? "true" : "false"));
         // only run on last hit
         if (event.arrowStopped) {
             swap(event.shooter, event.arrow);

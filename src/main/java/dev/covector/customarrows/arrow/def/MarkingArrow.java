@@ -96,6 +96,8 @@ public class MarkingArrow extends CustomArrow implements AutoCloseable, Listener
         ArrayList<String> lore = new ArrayList<String>();
         lore.add(ChatColor.WHITE + "Mark enemy with glowing effect");
         lore.add(ChatColor.GRAY + "Marked enemy will take " + String.valueOf(damageMultiplier) + "x damage");
+        lore.add(ChatColor.GRAY + "Arrows that didn't hit anything will");
+        lore.add(ChatColor.GRAY + "automatically hit marked entities");
         return lore;
     }
 

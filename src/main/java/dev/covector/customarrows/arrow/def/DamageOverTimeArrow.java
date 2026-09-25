@@ -24,7 +24,7 @@ import dev.covector.customarrows.arrow.CustomArrow;
 
 public class DamageOverTimeArrow extends CustomArrow {
     private static Color color = Color.BLACK;
-    private static String name = "Damage Over Time Arrow";
+    private static String name = "Wither Arrow";
     private HashMap<String, BukkitTask> runningMap = new HashMap<String, BukkitTask>();
     private int duration;
     private int period;
@@ -61,13 +61,11 @@ public class DamageOverTimeArrow extends CustomArrow {
         }
 
         // create new damage over time runnable
-        Bukkit.broadcastMessage(String.valueOf(id));
         BukkitTask task = new BukkitRunnable() {
             long ticksPassed = 0;
 
             public void run() {
                 // on end
-                Bukkit.broadcastMessage("runTime: " + ticksPassed);
                 if (ticksPassed > duration * 20) {
                     cancel();
                     runningMap.remove(uuid);
@@ -127,6 +125,7 @@ public class DamageOverTimeArrow extends CustomArrow {
         ArrayList<String> lore = new ArrayList<String>();
         lore.add(ChatColor.WHITE + "Give wither to target");
         lore.add(ChatColor.GRAY + String.valueOf(damage) + " damage every " + String.valueOf(period) + " ticks for " + String.valueOf(duration) + "s");
+        lore.add(ChatColor.GRAY + "will trigger onHitEntities of other arrows");
         return lore;
     }
 }

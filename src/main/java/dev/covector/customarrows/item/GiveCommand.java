@@ -1,9 +1,16 @@
 package dev.covector.customarrows.item;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -12,7 +19,7 @@ import dev.covector.customarrows.CustomArrowsPlugin;
 import dev.covector.customarrows.arrow.ArrowRegistry;
 import dev.covector.customarrows.arrow.ParamTester;
 
-public class GiveCommand implements CommandExecutor {
+public class GiveCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {  
         switch(args.length) {
@@ -126,5 +133,21 @@ public class GiveCommand implements CommandExecutor {
         }
 
         return false;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+        if (args.length == 1) {
+            return Arrays.asList("list", "arrow", "bow", "bind", "quickswap");
+        }
+        if (args.length == 2) {
+            if (args[0].toLowerCase().equals("arrow")) {
+                return IntStream.rangeClosed(0, ArrowRegistry.getArrowTypeCount() - 1)
+                    .mapToObj(String::valueOf)
+                    .collect(Collectors.toList());
+            }
+        }
+
+        return new ArrayList<String>();
     }
 }

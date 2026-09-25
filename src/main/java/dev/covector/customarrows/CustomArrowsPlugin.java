@@ -33,6 +33,7 @@ public class CustomArrowsPlugin extends JavaPlugin
 
         // command handler
         this.getCommand("ca").setExecutor(new GiveCommand());
+        this.getCommand("ca").setTabCompleter(new GiveCommand());
 
         // arrow listener
         arrowListener = new ArrowListener();

@@ -20,7 +20,7 @@ import dev.covector.customarrows.arrow.ArrowRegistry;
 import dev.covector.customarrows.arrow.CustomArrow;
 
 public class EarthquakeArrow extends CustomArrow {
-    private static Color color = Color.fromRGB(52, 232, 235);
+    private static Color color = Color.fromRGB(28, 6, 7);
     private static String name = "Earthquake Arrow";
 
     public void onHitGround(GroundHitEvent event) {
@@ -60,8 +60,8 @@ public class EarthquakeArrow extends CustomArrow {
 
     public ArrayList<String> getLore() {
         ArrayList<String> lore = new ArrayList<String>();
-        lore.add(ChatColor.WHITE + "Trigger onHitGround ability");
-        lore.add(ChatColor.GRAY + "under every hit mobs.");
+        lore.add(ChatColor.WHITE + "Trigger onHitGround of other arrows");
+        lore.add(ChatColor.WHITE + "under every hit mobs.");
         return lore;
     }
 }

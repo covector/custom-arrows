@@ -17,13 +17,15 @@ import dev.covector.customarrows.arrow.CustomArrow;
 public class HalfHealthArrow extends CustomArrow {
     private static Color color = Color.fromRGB(74, 10, 5);
     private String name = "Half Health Arrow";
+    private double damageCap = 4.2D;
+    private double selfDamage = 2D;
 
     public void onHitGround(GroundHitEvent event) {
     }
 
     public void onHitEntity(EntityHitEvent event) {
         // -2 health
-        event.shooter.setHealth(event.shooter.getHealth() - 2);
+        event.shooter.setHealth(event.shooter.getHealth() - selfDamage);
         event.shooter.damage(0.1);
     }
 
@@ -40,7 +42,7 @@ public class HalfHealthArrow extends CustomArrow {
                 entity.setHealth(0.5 * maxhealth);
                 return 0;
             }
-            return Math.min(entity.getHealth() - 0.5 * maxhealth, damage * 4.2D);
+            return Math.min(entity.getHealth() - 0.5 * maxhealth, damage * damageCap);
         } else {
             entity.setHealth(0.5 * maxhealth);
             return 0;
@@ -62,8 +64,9 @@ public class HalfHealthArrow extends CustomArrow {
     public ArrayList<String> getLore() {
         ArrayList<String> lore = new ArrayList<String>();
         lore.add(ChatColor.WHITE + "Cut hit entity's health in half");
-        lore.add(ChatColor.GRAY + "Damage capped at 4.20x arrow damage");
+        lore.add(ChatColor.GRAY + "Damage capped at " + String.valueOf(damageCap) + "x arrow damage");
         lore.add(ChatColor.GRAY + "Can affect players");
+        lore.add(ChatColor.GRAY + "Will damage shooter by " + String.valueOf(selfDamage) + " health");
         return lore;
     }
 }

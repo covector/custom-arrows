@@ -68,8 +68,6 @@ public class ArrowListener implements Listener {
     HashMap<String, BukkitTask> arrowCheckTasks = new HashMap<String, BukkitTask>();
     @EventHandler
     public void onArrowHit(ProjectileHitEvent event) {
-        Bukkit.broadcastMessage("onArrowHit");
-
         // check if is arrow
         if (event.getEntityType() != EntityType.ARROW) {
             return;
@@ -87,8 +85,6 @@ public class ArrowListener implements Listener {
             int[] ids = ArrowHelper.getCustomArrowIDs(arrow);
             
             if (event.getHitEntity() != null) {
-                Bukkit.broadcastMessage(event.getHitEntity().getType().name());
-                Bukkit.broadcastMessage(String.valueOf(arrow.getPierceLevel()));
                 // add pierced entities 
                 Entity entity = event.getHitEntity();
                 ArrowHelper.addPiercedEntities(arrow, entity.getUniqueId());
@@ -110,7 +106,6 @@ public class ArrowListener implements Listener {
                 }
                 BukkitTask task = Bukkit.getScheduler().runTaskLater(CustomArrowsPlugin.plugin, () -> {
                     if (arrow.isValid() && (arrow.isInBlock() || arrow.getVelocity().lengthSquared() < 0.01)) {
-                        Bukkit.broadcastMessage("in block");
                         // trigger onHitGround
                         CustomArrow.GroundHitEvent groundHitEvent = new CustomArrow.GroundHitEvent(shooter, arrow, arrow.getLocation(), BlockFace.UP);
                         for (int id : ids) {
@@ -121,13 +116,10 @@ public class ArrowListener implements Listener {
                         if (ArrowHelper.needsRemove(arrow)) {
                             arrow.remove();
                         }
-                    } else {
-                        Bukkit.broadcastMessage("not in block");
                     }
                 }, 5);
                 arrowCheckTasks.put(arrow.getUniqueId().toString(), task);
             } else if (event.getHitBlock() != null) {
-                Bukkit.broadcastMessage("hit ground");
                 // trigger onHitGround
                 BlockFace blockFace = event.getHitBlockFace();
                 Location location = event.getHitBlock().getLocation().add(0.5, 0.5, 0.5).add(blockFace.getDirection().multiply(.5));

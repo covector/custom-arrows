@@ -61,7 +61,7 @@ public class LifeStealArrow extends CustomArrow {
         ArrayList<String> lore = new ArrayList<String>();
         lore.add(ChatColor.WHITE + "Heal 1 health for first pierced");
         lore.add(ChatColor.WHITE + "Increase exponentially after every piercing");
-        lore.add(ChatColor.WHITE + "(i.e. 2nd pierced: heal 2, 3rd pierced: heal 4, ...)");
+        lore.add(ChatColor.GRAY + "(i.e. 2nd pierced: heal 2, 3rd pierced: heal 4, ...)");
         return lore;
     }
 }

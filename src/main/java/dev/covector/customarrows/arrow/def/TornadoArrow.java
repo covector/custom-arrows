@@ -95,7 +95,6 @@ public class TornadoArrow extends CustomArrow {
     public ArrayList<String> getLore() {
         ArrayList<String> lore = new ArrayList<String>();
         lore.add(ChatColor.WHITE + "Create a tornado when hit ground");
-        lore.add(ChatColor.GRAY + "Players will be pulled as well");
         return lore;
     }
 

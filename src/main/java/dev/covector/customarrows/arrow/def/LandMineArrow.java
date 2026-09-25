@@ -39,7 +39,6 @@ public class LandMineArrow extends CustomArrow {
     private int delayTick;
     private String suffix;
     private Random random = new Random();
-    private NamespacedKey key;
 
     public LandMineArrow(double triggerRadius, double blastRadius, double damage, double setupDuration, double activeDuration, int delayTick, String suffix) {
         this.triggerRadius = triggerRadius;
@@ -51,7 +50,6 @@ public class LandMineArrow extends CustomArrow {
         this.activeDuration = activeDuration;
         this.delayTick = delayTick;
         this.suffix = suffix;
-        this.key = new NamespacedKey(CustomArrowsPlugin.plugin, "arrow-types");
     }
 
     public void onHitGround(GroundHitEvent event) {
@@ -198,6 +196,7 @@ public class LandMineArrow extends CustomArrow {
         lore.add(ChatColor.GRAY + "Mine will detonate " + String.valueOf(delayTick/20D) + "s after triggered by entity except self");
         lore.add(ChatColor.GRAY + "Mine will deactivate after " + String.valueOf(activeDuration) + "s");
         lore.add(ChatColor.GRAY + "Deals " + String.valueOf(damage) + " amount of damage");
+        lore.add(ChatColor.GRAY + "Will trigger onHitEntities of other arrows");
         return lore;
     }
 }

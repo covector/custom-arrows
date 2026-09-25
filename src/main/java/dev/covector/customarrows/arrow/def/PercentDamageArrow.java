@@ -16,6 +16,7 @@ public class PercentDamageArrow extends CustomArrow {
     private static Color color = Color.fromRGB(74, 10, 5);
     private static String name = "Percent Damage Arrow";
     private double percent;
+    private double selfDamage = 1D;
 
     public PercentDamageArrow(double percent) {
         this.percent = percent;
@@ -26,7 +27,7 @@ public class PercentDamageArrow extends CustomArrow {
 
     public void onHitEntity(EntityHitEvent event) {
         // -1 health
-        event.shooter.setHealth(event.shooter.getHealth() - 1);
+        event.shooter.setHealth(event.shooter.getHealth() - selfDamage);
         event.shooter.damage(0.1);
     }
 
@@ -56,6 +57,8 @@ public class PercentDamageArrow extends CustomArrow {
         ArrayList<String> lore = new ArrayList<String>();
         lore.add(ChatColor.WHITE + "Deals " + String.valueOf(percent * 100) + "% of target's health");
         lore.add(ChatColor.GRAY + "Damage capped at 2.5x arrow damage");
+        lore.add(ChatColor.GRAY + "Won't affect players");
+        lore.add(ChatColor.GRAY + "Will damage shooter by " + String.valueOf(selfDamage) + " health");
         return lore;
     }
 }

@@ -51,7 +51,6 @@ public class DamageNearestArrow extends CustomArrow {
                 !(entity instanceof Player) &&
                 !(entity instanceof ArmorStand)
             ).collect(Collectors.toList()); // filter out hit entities
-        Bukkit.broadcastMessage("Near Mobs: " + String.valueOf(entities.size()));
         EntityDistance[] entityDistances = new EntityDistance[entities.size()];
         int j = 0;
         for (Entity entity : entities) {
@@ -64,7 +63,6 @@ public class DamageNearestArrow extends CustomArrow {
 
         // can pierce (pierce level + 1) mobs
         int canPierce = arrow.getPierceLevel() + 1;
-        Bukkit.broadcastMessage("Piece: " + String.valueOf(canPierce));
         for (int i = 0; i < entityDistances.length && canPierce > 0; i++) {
             Entity entity = entityDistances[i].entity;
 
@@ -140,9 +138,9 @@ public class DamageNearestArrow extends CustomArrow {
     public ArrayList<String> getLore() {
         ArrayList<String> lore = new ArrayList<String>();
         lore.add(ChatColor.WHITE + "Damage nearest entity within " + String.valueOf(radius) + " radius");
-        lore.add(ChatColor.GRAY + "when hit ground");
-        lore.add(ChatColor.GRAY + "compatible with piercing level");
-        lore.add(ChatColor.GRAY + "will trigger on hit entities of other arrows");
+        lore.add(ChatColor.WHITE + "when hit ground");
+        lore.add(ChatColor.GRAY + "Compatible with piercing level");
+        lore.add(ChatColor.GRAY + "Will trigger onHitEntities of other arrows");
         return lore;
     }
 }
