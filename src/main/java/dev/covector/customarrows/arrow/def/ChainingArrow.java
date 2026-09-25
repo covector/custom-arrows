@@ -2,6 +2,7 @@ package dev.covector.customarrows.arrow.def;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
@@ -24,6 +25,7 @@ public class ChainingArrow extends CustomArrow {
     private static Color color = Color.fromRGB(245, 152, 66);
     private static String name = "Chaining Arrow";
     private int delay = 10;
+    private HashSet<String> inUsePlayers = new HashSet<String>();
 
     public void onHitGround(GroundHitEvent event) {
     }
@@ -39,6 +41,8 @@ public class ChainingArrow extends CustomArrow {
             return;
         }
         Player player = (Player) shooter;
+        if (inUsePlayers.contains(player.getUniqueId().toString())) { return; }
+        inUsePlayers.add(player.getUniqueId().toString());
         new BukkitRunnable() {
             public void run() {
                 ItemStack crossBow = player.getInventory().getItemInMainHand();
@@ -51,6 +55,7 @@ public class ChainingArrow extends CustomArrow {
                     }
                     player.getWorld().playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_XYLOPHONE, 1, 1);
                 }
+                inUsePlayers.remove(player.getUniqueId().toString());
             }
         }.runTaskLater(CustomArrowsPlugin.plugin, delay);
     }
@@ -69,6 +74,10 @@ public class ChainingArrow extends CustomArrow {
     
     public String getName() {
         return name;
+    }
+
+    public boolean allowTrigger() {
+        return true;
     }
 
     public ArrayList<String> getLore() {

@@ -111,7 +111,7 @@ public class WallLaserArrow extends CustomArrow {
                 Location hitLocation = blockray.getHitBlock().getLocation().add(0.5, 0.5, 0.5).add(blockray.getHitBlockFace().getDirection().multiply(.5));
                 hitEnd = hitLocation;
                 int[] ids = ArrowHelper.getCustomArrowIDs(arrow);
-                GroundHitEvent groundHitEvent = new GroundHitEvent(shooter, arrow, hitLocation, blockray.getHitBlockFace(), new UUID[0]);
+                GroundHitEvent groundHitEvent = new GroundHitEvent(shooter, arrow, hitLocation, blockray.getHitBlockFace());
                 for (int id : ids) {
                     // if (ArrowRegistry.getArrowType(id) == this) { continue; }  // DO NOT COMMENT THIS OUT NO MATTER WHAT
                     if (ArrowRegistry.getArrowType(id) != this) {
@@ -197,6 +197,10 @@ public class WallLaserArrow extends CustomArrow {
 
     public String getName() {
         return name;
+    }
+
+    public boolean allowTrigger() {
+        return true;
     }
 
     public ArrayList<String> getLore() {

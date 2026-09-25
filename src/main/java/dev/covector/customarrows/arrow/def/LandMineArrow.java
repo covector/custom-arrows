@@ -141,7 +141,7 @@ public class LandMineArrow extends CustomArrow {
                              
                             // call hit entity event
                             boolean arrowStopped = i == entities.length - 1;
-                            EntityHitEvent entityHitEvent = new EntityHitEvent(shooter, arrow, shooter, arrowStopped);
+                            EntityHitEvent entityHitEvent = new EntityHitEvent(shooter, arrow, entity, arrowStopped);
                             ArrowHelper.triggerOnHitEntity(entityHitEvent, id);
                         }
 
@@ -184,6 +184,10 @@ public class LandMineArrow extends CustomArrow {
 
     public boolean removeOnHitGround() {
         return false;
+    }
+
+    public boolean allowTrigger() {
+        return true;
     }
 
     public ArrayList<String> getLore() {

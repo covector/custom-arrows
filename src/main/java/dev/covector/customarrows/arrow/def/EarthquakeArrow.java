@@ -20,7 +20,7 @@ import dev.covector.customarrows.arrow.ArrowRegistry;
 import dev.covector.customarrows.arrow.CustomArrow;
 
 public class EarthquakeArrow extends CustomArrow {
-    private static Color color = Color.fromRGB(227, 227, 227);
+    private static Color color = Color.fromRGB(52, 232, 235);
     private static String name = "Earthquake Arrow";
 
     public void onHitGround(GroundHitEvent event) {
@@ -32,9 +32,8 @@ public class EarthquakeArrow extends CustomArrow {
         Entity entity = event.entity;
         Location location = entity.getLocation();
         BlockFace blockFace = BlockFace.UP;
-        UUID[] piercedEntities = ArrowHelper.getPiercedEntityIDs(arrow);
 
-        GroundHitEvent groundHitEvent = new GroundHitEvent(shooter, arrow, location, blockFace, piercedEntities);
+        GroundHitEvent groundHitEvent = new GroundHitEvent(shooter, arrow, location, blockFace);
         ArrowHelper.triggerOnHitGround(groundHitEvent, id);
     }
 
@@ -53,6 +52,10 @@ public class EarthquakeArrow extends CustomArrow {
 
     public boolean removeOnHitGround() {
         return true;
+    }
+
+    public boolean allowTrigger() {
+        return false;
     }
 
     public ArrayList<String> getLore() {

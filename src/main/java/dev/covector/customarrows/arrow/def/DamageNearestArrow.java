@@ -3,12 +3,18 @@ package dev.covector.customarrows.arrow.def;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -30,25 +36,37 @@ public class DamageNearestArrow extends CustomArrow {
         Arrow arrow = event.arrow;
         LivingEntity shooter = event.shooter;
 
+        // get hit entities
+        UUID[] uuids = ArrowHelper.getPiercedEntityIDs(arrow);
+        HashSet<String> hitEntities = new HashSet<String>();
+        for (UUID uuid : uuids) {
+            hitEntities.add(uuid.toString());
+        }
+
         // sort nearest entities
-        Collection<Entity> entities = location.getWorld().getNearbyEntities(location, radius, radius, radius);
+        List<Entity> entities = location.getWorld().getNearbyEntities(location, radius, radius, radius).stream()
+            .filter(entity -> 
+                !hitEntities.contains(entity.getUniqueId().toString()) &&
+                entity instanceof LivingEntity &&
+                !(entity instanceof Player) &&
+                !(entity instanceof ArmorStand)
+            ).collect(Collectors.toList()); // filter out hit entities
+        Bukkit.broadcastMessage("Near Mobs: " + String.valueOf(entities.size()));
         EntityDistance[] entityDistances = new EntityDistance[entities.size()];
         int j = 0;
         for (Entity entity : entities) {
-            entityDistances[j] = new EntityDistance(entity, arrow);
+            entityDistances[j] = new EntityDistance(entity, location);
             j++;
         }
         Arrays.sort(entityDistances, (a, b) -> {
             return Double.compare(a.getDistance(), b.getDistance());
         });
 
-        // convert remaining piercing into damage nearest
+        // can pierce (pierce level + 1) mobs
         int canPierce = arrow.getPierceLevel() + 1;
+        Bukkit.broadcastMessage("Piece: " + String.valueOf(canPierce));
         for (int i = 0; i < entityDistances.length && canPierce > 0; i++) {
             Entity entity = entityDistances[i].entity;
-            if (!(entity instanceof LivingEntity) || entity instanceof Player) {
-                continue;
-            }
 
             LivingEntity livingEntity = (LivingEntity) entity;
             
@@ -68,11 +86,17 @@ public class DamageNearestArrow extends CustomArrow {
             }
 
             // call hit entity event
-            boolean arrowStopped = i >= entityDistances.length || canPierce <= 1;
+            boolean arrowStopped = i >= entityDistances.length - 1 || canPierce <= 1;
             EntityHitEvent entityHitEvent = new EntityHitEvent(shooter, arrow, livingEntity, arrowStopped);
             ArrowHelper.triggerOnHitEntity(entityHitEvent, id);
 
             canPierce--;
+        }
+
+        // hardcode trigger swap
+        if (entityDistances.length == 0 && ArrowHelper.hasArrowID(event.arrow, 0)) {
+            EntityHitEvent entityHitEvent = new EntityHitEvent(shooter, arrow, null, true);
+            ArrowRegistry.getArrowType(0).onHitEntity(entityHitEvent);
         }
     }
 
@@ -80,9 +104,9 @@ public class DamageNearestArrow extends CustomArrow {
         Entity entity;
         double distance;
 
-        public EntityDistance(Entity entity, Arrow arrow) {
+        public EntityDistance(Entity entity, Location location) {
             this.entity = entity;
-            this.distance = entity.getLocation().distanceSquared(arrow.getLocation());
+            this.distance = entity.getLocation().distanceSquared(location);
         }
 
         public double getDistance() {
@@ -107,6 +131,10 @@ public class DamageNearestArrow extends CustomArrow {
     
     public String getName() {
         return name;
+    }
+
+    public boolean allowTrigger() {
+        return true;
     }
 
     public ArrayList<String> getLore() {

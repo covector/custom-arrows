@@ -27,6 +27,7 @@ public class PercentDamageArrow extends CustomArrow {
     public void onHitEntity(EntityHitEvent event) {
         // -1 health
         event.shooter.setHealth(event.shooter.getHealth() - 1);
+        event.shooter.damage(0.1);
     }
 
     public Color getColor() {
@@ -45,6 +46,10 @@ public class PercentDamageArrow extends CustomArrow {
     
     public String getName() {
         return name;
+    }
+
+    public boolean allowTrigger() {
+        return true;
     }
 
     public ArrayList<String> getLore() {

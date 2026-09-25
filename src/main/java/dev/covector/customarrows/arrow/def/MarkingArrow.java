@@ -147,20 +147,44 @@ public class MarkingArrow extends CustomArrow implements AutoCloseable, Listener
                 // loop through all custom arrows
                 int[] ids = arrow.getPersistentDataContainer().get(CustomArrowsPlugin.plugin.arrowTypesKey, PersistentDataType.INTEGER_ARRAY);
                 
+                int markedCount = marked.size();
+                int piercedCount = 0;
                 for (String uuid: marked) {
-                    // add pierced entities 
+                    piercedCount++;
                     Entity entity = Bukkit.getEntity(UUID.fromString(uuid));
-                    ArrowHelper.addPiercedEntities(arrow, entity.getUniqueId());
+                    if (!(entity instanceof LivingEntity) || entity instanceof Player) {
+                        continue;
+                    }
+                    LivingEntity livingEntity = (LivingEntity) entity;
+
+                    // add pierced entities 
+                    ArrowHelper.addPiercedEntities(arrow, livingEntity.getUniqueId());
+
+                    // get modified damage
+                    double damage = arrow.getDamage() * 6.5D;
+                    DamageEvent damageEvent = new DamageEvent(shooter, arrow, livingEntity, damage);
+                    damage = ArrowHelper.calculateDamage(damageEvent, id);
+                
+                    // set damaged by player
+                    if (shooter instanceof Player) {
+                        livingEntity.damage(damage, shooter);
+                    } else {
+                        livingEntity.damage(damage);
+                    }
 
                     // trigger onHitEntity
-                    boolean arrowStopped = arrow.getPierceLevel() == 0;
-                    CustomArrow.EntityHitEvent entityHitEvent = new CustomArrow.EntityHitEvent(shooter, arrow, entity, arrowStopped);
+                    boolean arrowStopped = piercedCount == markedCount;
+                    CustomArrow.EntityHitEvent entityHitEvent = new CustomArrow.EntityHitEvent(shooter, arrow, livingEntity, arrowStopped);
                     for (int id : ids) {
                         ArrowRegistry.getArrowType(id).onHitEntity(entityHitEvent);
                     }
                 }
             }
         }
+    }
+
+    public boolean allowTrigger() {
+        return true;
     }
 
     @Override

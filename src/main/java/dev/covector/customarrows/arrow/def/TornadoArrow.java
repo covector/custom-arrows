@@ -88,6 +88,10 @@ public class TornadoArrow extends CustomArrow {
         return name + " " + suffix;
     }
 
+    public boolean allowTrigger() {
+        return true;
+    }
+
     public ArrayList<String> getLore() {
         ArrayList<String> lore = new ArrayList<String>();
         lore.add(ChatColor.WHITE + "Create a tornado when hit ground");

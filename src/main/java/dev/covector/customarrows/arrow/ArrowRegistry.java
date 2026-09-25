@@ -2,32 +2,34 @@ package dev.covector.customarrows.arrow;
 
 import java.util.ArrayList;
 
+import org.bukkit.Bukkit;
+
 import dev.covector.customarrows.arrow.def.*;
 
 public class ArrowRegistry {
     private static ArrayList<CustomArrow> arrowTypes = new ArrayList<CustomArrow>();
 
-    public static void register() {
-        arrowTypes.add(new SwapArrow()); // 0
-        arrowTypes.add(new TornadoArrow(1, 2, 8, "Small")); // 1
-        arrowTypes.add(new TornadoArrow(3, 0.25, 6, "Big")); // 2
-        arrowTypes.add(new PercentDamageArrow(0.25)); // 3
-        arrowTypes.add(new HalfHealthArrow()); // 4
-        arrowTypes.add(new MarkingArrow(7)); // 5
-        arrowTypes.add(new DamageOverTimeArrow(12, 3)); // 6
-        arrowTypes.add(new TrueDamageArrow()); // 7
-        arrowTypes.add(new DamageNearestArrow()); // 8
-        arrowTypes.add(new FramingArrow()); // 9
-        arrowTypes.add(new LandMineArrow(1, 1, 190, 3, 6, 20, "Strong")); // 10
-        arrowTypes.add(new LandMineArrow(1, 2, 38, 1, 2, 15, "Quick")); // 11
-        arrowTypes.add(new ChainingArrow()); // 12
-        arrowTypes.add(new RidingArrow()); // 13
-        arrowTypes.add(new WallLaserArrow()); // 14
-        arrowTypes.add(new LifeStealArrow()); // 15
-        arrowTypes.add(new EarthquakeArrow()); // 16
+    public static void registerAll() {
+        registerArrow(new SwapArrow()); // 0
+        registerArrow(new TornadoArrow(1, 2, 8, "Small")); // 1
+        registerArrow(new TornadoArrow(3, 0.25, 6, "Big")); // 2
+        registerArrow(new PercentDamageArrow(0.25)); // 3
+        registerArrow(new HalfHealthArrow()); // 4
+        registerArrow(new MarkingArrow(7)); // 5
+        registerArrow(new DamageOverTimeArrow(12, 20, 2)); // 6
+        registerArrow(new TrueDamageArrow()); // 7
+        registerArrow(new DamageNearestArrow()); // 8
+        registerArrow(new FramingArrow()); // 9
+        registerArrow(new LandMineArrow(1, 1, 190, 3, 6, 20, "Strong")); // 10
+        registerArrow(new LandMineArrow(1, 2, 38, 1, 2, 15, "Quick")); // 11
+        registerArrow(new ChainingArrow()); // 12
+        registerArrow(new RidingArrow()); // 13
+        registerArrow(new WallLaserArrow()); // 14
+        registerArrow(new LifeStealArrow()); // 15
+        registerArrow(new EarthquakeArrow()); // 16
     }
 
-    public static void registerAll() {
+    public static void unregisterAll() {
         arrowTypes.clear();
     }
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -26,11 +27,13 @@ public class DamageOverTimeArrow extends CustomArrow {
     private static String name = "Damage Over Time Arrow";
     private HashMap<String, BukkitTask> runningMap = new HashMap<String, BukkitTask>();
     private int duration;
-    private int amplifier;
+    private int period;
+    private int damage;
 
-    public DamageOverTimeArrow(int duration, int amplifier) {
+    public DamageOverTimeArrow(int duration, int period, int damage) {
         this.duration = duration;
-        this.amplifier = amplifier;
+        this.period = period;
+        this.damage = damage;
     }
 
     public void onHitGround(GroundHitEvent event) {
@@ -58,15 +61,17 @@ public class DamageOverTimeArrow extends CustomArrow {
         }
 
         // create new damage over time runnable
-        long period = 20 / (amplifier + 1);
+        Bukkit.broadcastMessage(String.valueOf(id));
         BukkitTask task = new BukkitRunnable() {
-            long runTime = 0;
+            long ticksPassed = 0;
 
             public void run() {
                 // on end
-                if (runTime > duration * 20) {
+                Bukkit.broadcastMessage("runTime: " + ticksPassed);
+                if (ticksPassed > duration * 20) {
                     cancel();
                     runningMap.remove(uuid);
+                    return;
                 }
 
                 // set piercedEntities
@@ -76,25 +81,25 @@ public class DamageOverTimeArrow extends CustomArrow {
                 ArrowHelper.addPiercedEntities(arrow, livingEntity.getUniqueId());
 
                 // get modified damage
-                double damage = 1;
-                DamageEvent damageEvent = new DamageEvent(shooter, arrow, livingEntity, damage);
-                damage = ArrowHelper.calculateDamage(damageEvent, id);
+                double baseDamage = damage;
+                DamageEvent damageEvent = new DamageEvent(shooter, arrow, livingEntity, baseDamage);
+                double finalDamage = ArrowHelper.calculateDamage(damageEvent, id);
                 
                 // set damaged by player
                 if (shooter instanceof Player) {
-                    livingEntity.damage(damage, shooter);
+                    livingEntity.damage(finalDamage, shooter);
                 } else {
-                    livingEntity.damage(damage);
+                    livingEntity.damage(finalDamage);
                 }
 
                 // call hit entity event
                 EntityHitEvent entityHitEvent = new EntityHitEvent(shooter, arrow, livingEntity, true);
                 ArrowHelper.triggerOnHitEntity(entityHitEvent, id);
 
-                // increase runTime
-                runTime += period;
+                // increase ticksPassed
+                ticksPassed += period;
             }
-        }.runTaskTimer(CustomArrowsPlugin.plugin, 0, period);
+        }.runTaskTimer(CustomArrowsPlugin.plugin, period, period);
         runningMap.put(uuid, task);
     }
 
@@ -114,10 +119,14 @@ public class DamageOverTimeArrow extends CustomArrow {
         return true;
     }
 
+    public boolean allowTrigger() {
+        return true;
+    }
+
     public ArrayList<String> getLore() {
         ArrayList<String> lore = new ArrayList<String>();
         lore.add(ChatColor.WHITE + "Give wither to target");
-        lore.add(ChatColor.GRAY + "wither " + String.valueOf(amplifier+1) + " for " + String.valueOf(duration) + "s");
+        lore.add(ChatColor.GRAY + String.valueOf(damage) + " damage every " + String.valueOf(period) + " ticks for " + String.valueOf(duration) + "s");
         return lore;
     }
 }

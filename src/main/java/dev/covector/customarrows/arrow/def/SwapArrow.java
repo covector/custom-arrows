@@ -3,6 +3,7 @@ package dev.covector.customarrows.arrow.def;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -19,6 +20,7 @@ public class SwapArrow extends CustomArrow {
     private static String name = "Swap Arrow";
 
     public void onHitEntity(EntityHitEvent event) {
+        Bukkit.broadcastMessage("last hit" + (event.arrowStopped ? "true" : "false"));
         // only run on last hit
         if (event.arrowStopped) {
             swap(event.shooter, event.arrow);
@@ -26,6 +28,7 @@ public class SwapArrow extends CustomArrow {
     }
 
     public void onHitGround(GroundHitEvent event) {
+        if (ArrowHelper.hasArrowID(event.arrow, 8)) { return; } // hardcode don't run if have damage nearest arrow
         swap(event.shooter, event.arrow);
     }
 
@@ -69,6 +72,10 @@ public class SwapArrow extends CustomArrow {
 
     public String getName() {
         return name;
+    }
+
+    public boolean allowTrigger() {
+        return true;
     }
 
     public ArrayList<String> getLore() {

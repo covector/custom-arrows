@@ -1,8 +1,10 @@
 package dev.covector.customarrows.arrow;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
@@ -24,6 +26,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.scheduler.BukkitTask;
 
 import dev.covector.customarrows.CustomArrowsPlugin;
 import dev.covector.customarrows.item.ItemManager;
@@ -57,10 +60,16 @@ public class ArrowListener implements Listener {
         arrow.setColor(ArrowRegistry.getArrowType(arrowIds[0]).getColor());
         // store custom arrow ids into arrow entity
         ArrowHelper.setCustomArrowIDs(arrow, arrowIds);
+        // initialize pierced remaining data
+        int piercedRemaining = arrow.getPierceLevel() + 1;
+        arrow.getPersistentDataContainer().set(CustomArrowsPlugin.plugin.pierceRemaining, PersistentDataType.INTEGER, piercedRemaining);
     }
 
+    HashMap<String, BukkitTask> arrowCheckTasks = new HashMap<String, BukkitTask>();
     @EventHandler
     public void onArrowHit(ProjectileHitEvent event) {
+        Bukkit.broadcastMessage("onArrowHit");
+
         // check if is arrow
         if (event.getEntityType() != EntityType.ARROW) {
             return;
@@ -75,25 +84,54 @@ public class ArrowListener implements Listener {
 
         if (ArrowHelper.isCustomArrow(arrow)) {
             // loop through all custom arrows
-            int[] ids = arrow.getPersistentDataContainer().get(CustomArrowsPlugin.plugin.arrowTypesKey, PersistentDataType.INTEGER_ARRAY);
+            int[] ids = ArrowHelper.getCustomArrowIDs(arrow);
             
             if (event.getHitEntity() != null) {
+                Bukkit.broadcastMessage(event.getHitEntity().getType().name());
+                Bukkit.broadcastMessage(String.valueOf(arrow.getPierceLevel()));
                 // add pierced entities 
                 Entity entity = event.getHitEntity();
                 ArrowHelper.addPiercedEntities(arrow, entity.getUniqueId());
 
-                 // trigger onHitEntity
-                boolean arrowStopped = arrow.getPierceLevel() == 0;
+                // trigger onHitEntity
+                int remainingPierce = arrow.getPersistentDataContainer().get(CustomArrowsPlugin.plugin.pierceRemaining, PersistentDataType.INTEGER);
+                remainingPierce--;
+                arrow.getPersistentDataContainer().set(CustomArrowsPlugin.plugin.pierceRemaining, PersistentDataType.INTEGER, remainingPierce);
+                boolean arrowStopped = remainingPierce == 0;
                 CustomArrow.EntityHitEvent entityHitEvent = new CustomArrow.EntityHitEvent(shooter, arrow, entity, arrowStopped);
                 for (int id : ids) {
                     ArrowRegistry.getArrowType(id).onHitEntity(entityHitEvent);
                 }
+
+                // check if arrow is in block
+                if (arrowCheckTasks.containsKey(arrow.getUniqueId().toString())) {
+                    arrowCheckTasks.get(arrow.getUniqueId().toString()).cancel();
+                    arrowCheckTasks.remove(arrow.getUniqueId().toString());
+                }
+                BukkitTask task = Bukkit.getScheduler().runTaskLater(CustomArrowsPlugin.plugin, () -> {
+                    if (arrow.isValid() && (arrow.isInBlock() || arrow.getVelocity().lengthSquared() < 0.01)) {
+                        Bukkit.broadcastMessage("in block");
+                        // trigger onHitGround
+                        CustomArrow.GroundHitEvent groundHitEvent = new CustomArrow.GroundHitEvent(shooter, arrow, arrow.getLocation(), BlockFace.UP);
+                        for (int id : ids) {
+                            ArrowRegistry.getArrowType(id).onHitGround(groundHitEvent);
+                        }
+                        
+                        // remove arrow if needed
+                        if (ArrowHelper.needsRemove(arrow)) {
+                            arrow.remove();
+                        }
+                    } else {
+                        Bukkit.broadcastMessage("not in block");
+                    }
+                }, 5);
+                arrowCheckTasks.put(arrow.getUniqueId().toString(), task);
             } else if (event.getHitBlock() != null) {
+                Bukkit.broadcastMessage("hit ground");
                 // trigger onHitGround
-                Location blockCenter = event.getHitBlock().getLocation().add(0.5, 0.5, 0.5);
                 BlockFace blockFace = event.getHitBlockFace();
-                UUID[] piercedEntities = ArrowHelper.getPiercedEntityIDs(arrow);
-                CustomArrow.GroundHitEvent groundHitEvent = new CustomArrow.GroundHitEvent(shooter, arrow, blockCenter, blockFace, piercedEntities);
+                Location location = event.getHitBlock().getLocation().add(0.5, 0.5, 0.5).add(blockFace.getDirection().multiply(.5));
+                CustomArrow.GroundHitEvent groundHitEvent = new CustomArrow.GroundHitEvent(shooter, arrow, location, blockFace);
                 for (int id : ids) {
                     ArrowRegistry.getArrowType(id).onHitGround(groundHitEvent);
                 }

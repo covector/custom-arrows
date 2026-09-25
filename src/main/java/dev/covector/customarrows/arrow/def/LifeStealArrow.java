@@ -53,6 +53,10 @@ public class LifeStealArrow extends CustomArrow {
         return name;
     }
 
+    public boolean allowTrigger() {
+        return true;
+    }
+
     public ArrayList<String> getLore() {
         ArrayList<String> lore = new ArrayList<String>();
         lore.add(ChatColor.WHITE + "Heal 1 health for first pierced");

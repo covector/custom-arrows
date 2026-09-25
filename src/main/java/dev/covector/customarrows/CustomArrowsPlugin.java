@@ -20,6 +20,7 @@ public class CustomArrowsPlugin extends JavaPlugin
     // namespaces
     public NamespacedKey arrowTypesKey = new NamespacedKey(this, "arrow-types");
     public NamespacedKey piercedEntitiesKey = new NamespacedKey(this, "pierced-entities");
+    public NamespacedKey pierceRemaining = new NamespacedKey(this, "pierce-remaining");
 
     @Override
     public void onEnable() {
@@ -36,7 +37,7 @@ public class CustomArrowsPlugin extends JavaPlugin
         // arrow listener
         arrowListener = new ArrowListener();
         Bukkit.getPluginManager().registerEvents(arrowListener, this);
-        ArrowRegistry.register();
+        ArrowRegistry.registerAll();
 
         // all registered
         getLogger().info("Custom Arrows Plugin Activated!");
@@ -46,6 +47,9 @@ public class CustomArrowsPlugin extends JavaPlugin
     public void onDisable() {
         // all event listener
         HandlerList.unregisterAll(this);
+
+        // unregister arrows
+        ArrowRegistry.unregisterAll();
 
         // command listener
         if (this.getCommand("ca") != null) {

@@ -25,11 +25,23 @@ public class ArrowHelper {
         return arrow.getPersistentDataContainer().get(CustomArrowsPlugin.plugin.arrowTypesKey, PersistentDataType.INTEGER_ARRAY);
     }
 
+    public static boolean hasArrowID(Arrow arrow, int id) {
+        int[] ids = getCustomArrowIDs(arrow);
+        for (int i : ids) {
+            if (i == id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static void triggerOnHitEntity(CustomArrow.EntityHitEvent event, int exceptID) {
         int[] ids = getCustomArrowIDs(event.arrow);
         for (int id : ids) {
             if (id == exceptID) { continue; }
-            ArrowRegistry.getArrowType(id).onHitEntity(event);
+            CustomArrow arrow = ArrowRegistry.getArrowType(id);
+            if (!arrow.allowTrigger()) { continue; }
+            arrow.onHitEntity(event);
         }
     }
 
@@ -37,7 +49,9 @@ public class ArrowHelper {
         int[] ids = getCustomArrowIDs(event.arrow);
         for (int id : ids) {
             if (id == exceptID) { continue; }
-            ArrowRegistry.getArrowType(id).onHitGround(event);
+            CustomArrow arrow = ArrowRegistry.getArrowType(id);
+            if (!arrow.allowTrigger()) { continue; }
+            arrow.onHitGround(event);
         }
     }
 
@@ -45,7 +59,9 @@ public class ArrowHelper {
         int[] ids = getCustomArrowIDs(event.arrow);
         for (int id : ids) {
             if (id == exceptID) { continue; }
-                double modDamage = ArrowRegistry.getArrowType(id).ModifyDamage(event);
+                CustomArrow arrow = ArrowRegistry.getArrowType(id);
+                if (!arrow.allowTrigger()) { continue; }
+                double modDamage = arrow.ModifyDamage(event);
                 if (modDamage != -1) {
                     return modDamage;
             }

@@ -50,6 +50,10 @@ public class TrueDamageArrow extends CustomArrow {
         return name;
     }
 
+    public boolean allowTrigger() {
+        return true;
+    }
+
     public ArrayList<String> getLore() {
         ArrayList<String> lore = new ArrayList<String>();
         lore.add(ChatColor.WHITE + "Deals (1.5*original damage) of true damage");

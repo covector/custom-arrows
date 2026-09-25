@@ -8,7 +8,6 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.block.BlockFace;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 public abstract class CustomArrow {
     public int id = -1;
@@ -19,19 +18,18 @@ public abstract class CustomArrow {
     public abstract String getName();
     public abstract ArrayList<String> getLore();
     public abstract boolean removeOnHitGround();
+    public abstract boolean allowTrigger();
 
     public static class GroundHitEvent {
         public LivingEntity shooter;
         public Arrow arrow;
         public Location location;
         public BlockFace blockFace;
-        public UUID[] piercedEntities;
-        public GroundHitEvent(LivingEntity shooter, Arrow arrow, Location location, BlockFace blockFace, UUID[] piercedEntities) {
+        public GroundHitEvent(LivingEntity shooter, Arrow arrow, Location location, BlockFace blockFace) {
             this.shooter = shooter;
             this.arrow = arrow;
             this.location = location;
             this.blockFace = blockFace;
-            this.piercedEntities = piercedEntities;
         }
     }
 

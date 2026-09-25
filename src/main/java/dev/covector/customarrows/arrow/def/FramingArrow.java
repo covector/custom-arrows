@@ -90,6 +90,10 @@ public class FramingArrow extends CustomArrow implements Listener {
         return name;
     }
 
+    public boolean allowTrigger() {
+        return true;
+    }
+
     public ArrayList<String> getLore() {
         ArrayList<String> lore = new ArrayList<String>();
         lore.add(ChatColor.WHITE + "Shoot an arrow out from hit entity");

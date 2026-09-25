@@ -24,6 +24,7 @@ public class HalfHealthArrow extends CustomArrow {
     public void onHitEntity(EntityHitEvent event) {
         // -2 health
         event.shooter.setHealth(event.shooter.getHealth() - 2);
+        event.shooter.damage(0.1);
     }
 
     public Color getColor() {
@@ -52,6 +53,10 @@ public class HalfHealthArrow extends CustomArrow {
 
     public String getName() {
         return name;
+    }
+
+    public boolean allowTrigger() {
+        return true;
     }
 
     public ArrayList<String> getLore() {
