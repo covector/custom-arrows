@@ -117,6 +117,10 @@ public class ArrowListener implements Listener {
                             arrow.remove();
                         }
                     }
+
+                    if (arrowCheckTasks.containsKey(arrow.getUniqueId().toString())) {
+                        arrowCheckTasks.remove(arrow.getUniqueId().toString());
+                    }
                 }, 5);
                 arrowCheckTasks.put(arrow.getUniqueId().toString(), task);
             } else if (event.getHitBlock() != null) {
@@ -131,6 +135,10 @@ public class ArrowListener implements Listener {
                 // remove arrow if needed
                 if (ArrowHelper.needsRemove(arrow)) {
                     arrow.remove();
+                }
+
+                if (arrowCheckTasks.containsKey(arrow.getUniqueId().toString())) {
+                    arrowCheckTasks.remove(arrow.getUniqueId().toString());
                 }
             }
         }
