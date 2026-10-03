@@ -59,11 +59,11 @@ public class ArrowHelper {
         int[] ids = getCustomArrowIDs(event.arrow);
         for (int id : ids) {
             if (id == exceptID) { continue; }
-                CustomArrow arrow = ArrowRegistry.getArrowType(id);
-                if (!arrow.allowTrigger()) { continue; }
-                double modDamage = arrow.ModifyDamage(event);
-                if (modDamage != -1) {
-                    return modDamage;
+            CustomArrow arrow = ArrowRegistry.getArrowType(id);
+            if (!arrow.allowTrigger()) { continue; }
+            double modDamage = arrow.ModifyDamage(event);
+            if (modDamage != -1) {
+                return modDamage;
             }
         }
         return event.damage;

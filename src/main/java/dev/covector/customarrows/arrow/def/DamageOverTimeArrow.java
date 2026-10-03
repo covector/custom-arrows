@@ -72,6 +72,13 @@ public class DamageOverTimeArrow extends CustomArrow {
                     return;
                 }
 
+                // check if entity still valid
+                if (!livingEntity.isValid()) {
+                    cancel();
+                    runningMap.remove(uuid);
+                    return;
+                }
+
                 // set piercedEntities
                 // note that this arrow is shared across all pierced entities
                 // so need to make sure it is reset before running the rest

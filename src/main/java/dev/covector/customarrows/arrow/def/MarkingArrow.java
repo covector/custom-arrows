@@ -149,6 +149,12 @@ public class MarkingArrow extends CustomArrow implements AutoCloseable, Listener
                 // loop through all custom arrows
                 int[] ids = arrow.getPersistentDataContainer().get(CustomArrowsPlugin.plugin.arrowTypesKey, PersistentDataType.INTEGER_ARRAY);
                 
+                // prune dead entities
+                marked.removeIf(uuidStr -> {
+                    Entity entity = Bukkit.getEntity(UUID.fromString(uuidStr));
+                    return entity == null || !entity.isValid();
+                });
+
                 int markedCount = marked.size();
                 int piercedCount = 0;
                 for (String uuid: marked) {

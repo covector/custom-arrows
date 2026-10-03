@@ -60,7 +60,6 @@ public class LandMineArrow extends CustomArrow {
         //     arrow.remove();
         //     return;
         // }
-        LandMineArrow tArrow = this;
         int interval = 2;
         new BukkitRunnable() {
             int ti = 0;
