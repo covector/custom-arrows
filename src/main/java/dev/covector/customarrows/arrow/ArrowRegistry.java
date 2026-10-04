@@ -18,10 +18,10 @@ public class ArrowRegistry {
         registerArrow(new MarkingArrow(7)); // 5
         registerArrow(new DamageOverTimeArrow(12, 20, 2)); // 6
         registerArrow(new TrueDamageArrow()); // 7
-        registerArrow(new DamageNearestArrow()); // 8
+        registerArrow(new DamageNearestArrow(3.5)); // 8
         registerArrow(new FramingArrow()); // 9
-        registerArrow(new LandMineArrow(1, 1, 190, 3, 6, 20, "Strong")); // 10
-        registerArrow(new LandMineArrow(1, 2, 38, 1, 2, 15, "Quick")); // 11
+        registerArrow(new LandMineArrow(1, 2, 20, 3, 2, 20, "Strong")); // 10
+        registerArrow(new LandMineArrow(1, 4, 4, 1, 2, 15, "Quick")); // 11
         registerArrow(new ChainingArrow()); // 12
         registerArrow(new RidingArrow()); // 13
         registerArrow(new WallLaserArrow()); // 14

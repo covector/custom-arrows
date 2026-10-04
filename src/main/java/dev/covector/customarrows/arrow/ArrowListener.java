@@ -66,6 +66,7 @@ public class ArrowListener implements Listener {
     }
 
     HashMap<String, BukkitTask> arrowCheckTasks = new HashMap<String, BukkitTask>();
+    NamespacedKey blockOnHitGround = new NamespacedKey(CustomArrowsPlugin.plugin, "block-onHitGround");
     @EventHandler
     public void onArrowHit(ProjectileHitEvent event) {
         // check if is arrow
@@ -116,6 +117,9 @@ public class ArrowListener implements Listener {
                         if (ArrowHelper.needsRemove(arrow)) {
                             arrow.remove();
                         }
+
+                        // prevent double trigger
+                        arrow.getPersistentDataContainer().set(blockOnHitGround, PersistentDataType.BYTE, (byte) 1);
                     }
 
                     if (arrowCheckTasks.containsKey(arrow.getUniqueId().toString())) {
@@ -124,6 +128,11 @@ public class ArrowListener implements Listener {
                 }, 5);
                 arrowCheckTasks.put(arrow.getUniqueId().toString(), task);
             } else if (event.getHitBlock() != null) {
+                // check if already triggered onHitGround by manual checker
+                if (arrow.getPersistentDataContainer().has(blockOnHitGround, PersistentDataType.BYTE)) {
+                    return;
+                }
+
                 // trigger onHitGround
                 BlockFace blockFace = event.getHitBlockFace();
                 Location location = event.getHitBlock().getLocation().add(0.5, 0.5, 0.5).add(blockFace.getDirection().multiply(.5));
@@ -138,6 +147,7 @@ public class ArrowListener implements Listener {
                 }
 
                 if (arrowCheckTasks.containsKey(arrow.getUniqueId().toString())) {
+                    arrowCheckTasks.get(arrow.getUniqueId().toString()).cancel();
                     arrowCheckTasks.remove(arrow.getUniqueId().toString());
                 }
             }
@@ -155,22 +165,27 @@ public class ArrowListener implements Listener {
         if(!(event.getDamager() instanceof Arrow)){
             return;
         }
-
-        // living entity is shot
+        
+        // shot by living entity
         Arrow arrow = (Arrow) event.getDamager();
         if(!(arrow.getShooter() instanceof LivingEntity)){
             return;
         }
-
-        // shot by living entity
         LivingEntity shooter = (LivingEntity) arrow.getShooter();
+
+        // living entity is shot
         if (!(event.getEntity() instanceof LivingEntity)) {
             return;
         }
+        LivingEntity entity = (LivingEntity) event.getEntity();
 
         // loop through to find first custom arrow that 
-        LivingEntity entity = (LivingEntity) event.getEntity();
         if (ArrowHelper.isCustomArrow(arrow)) {
+            // register last damage
+            if (shooter instanceof Player) {
+                ArrowHelper.registerPlayerLastDamage(shooter.getUniqueId(), event.getDamage());
+            }
+
             int[] ids = ArrowHelper.getCustomArrowIDs(arrow);
             for (int id : ids) {
                 // craft damage event

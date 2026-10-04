@@ -78,7 +78,7 @@ public class PercentDamageArrow extends CustomArrow {
     public ArrayList<String> getLore() {
         ArrayList<String> lore = new ArrayList<String>();
         lore.add(ChatColor.WHITE + "Deals " + String.valueOf(percent * 100) + "% of target's health");
-        lore.add(ChatColor.GRAY + "Damage capped at " + String.valueOf(damageCap) + " * shooter's health * bow damage");
+        lore.add(ChatColor.GRAY + "Damage capped at (" + String.valueOf(damageCap) + " * shooter's health * bow damage)");
         lore.add(ChatColor.GRAY + "Won't affect players");
         lore.add(ChatColor.GRAY + "Will damage shooter by " + String.valueOf(selfDamage) + " health");
         return lore;

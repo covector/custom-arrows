@@ -33,19 +33,19 @@ public class LandMineArrow extends CustomArrow {
     // private double triggerRadiusSquare;
     private double blastRadius;
     // private double blastRadiusSquare;
-    private double damage;
+    private double damageMultiplier;
     private double setupDuration;
     private double activeDuration;
     private int delayTick;
     private String suffix;
     private Random random = new Random();
 
-    public LandMineArrow(double triggerRadius, double blastRadius, double damage, double setupDuration, double activeDuration, int delayTick, String suffix) {
+    public LandMineArrow(double triggerRadius, double blastRadius, double damageMultiplier, double setupDuration, double activeDuration, int delayTick, String suffix) {
         this.triggerRadius = triggerRadius;
         // this.triggerRadiusSquare = triggerRadius * triggerRadius;
         this.blastRadius = blastRadius;
         // this.blastRadiusSquare = blastRadius * blastRadius;
-        this.damage = damage;
+        this.damageMultiplier = damageMultiplier;
         this.setupDuration = setupDuration;
         this.activeDuration = activeDuration;
         this.delayTick = delayTick;
@@ -128,6 +128,7 @@ public class LandMineArrow extends CustomArrow {
                             ArrowHelper.addPiercedEntities(arrow, entity.getUniqueId());
 
                             // damage and kb based on how close to center of explosion
+                            double damage = ArrowHelper.getPlayerLastDamage(shooter.getUniqueId(), arrow.getDamage() * 6.5D) * damageMultiplier;
                             double factor = 1 - entity.getLocation().distance(location) / blastRadius;
                             if (shooter instanceof Player) {
                                 entity.damage(damage * factor, shooter);
@@ -191,10 +192,12 @@ public class LandMineArrow extends CustomArrow {
         ArrayList<String> lore = new ArrayList<String>();
         lore.add(ChatColor.WHITE + "Set up a landmine");
         lore.add(ChatColor.GRAY + "Setup time: " + String.valueOf(setupDuration) + "s");
+        lore.add(ChatColor.GRAY + "Trigger radius: " + String.valueOf(triggerRadius));
+        lore.add(ChatColor.GRAY + "Blast radius: " + String.valueOf(blastRadius));
         // lore.add(ChatColor.GRAY + "Any entity except self will deactivate mine during setup");
         lore.add(ChatColor.GRAY + "Mine will detonate " + String.valueOf(delayTick/20D) + "s after triggered by entity except self");
         lore.add(ChatColor.GRAY + "Mine will deactivate after " + String.valueOf(activeDuration) + "s");
-        lore.add(ChatColor.GRAY + "Deals " + String.valueOf(damage) + " amount of damage");
+        lore.add(ChatColor.GRAY + "Deals (" + String.valueOf(damageMultiplier) + " *  bow damage) amount of damage");
         lore.add(ChatColor.GRAY + "Will trigger onHitEntities of other arrows");
         return lore;
     }

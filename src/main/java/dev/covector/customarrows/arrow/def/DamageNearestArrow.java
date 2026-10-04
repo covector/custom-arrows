@@ -29,7 +29,11 @@ import dev.covector.customarrows.arrow.CustomArrow;
 public class DamageNearestArrow extends CustomArrow {
     private static Color color = Color.fromRGB(227, 227, 227);
     private static String name = "Damage Nearest Arrow";
-    private double radius = 3.5;
+    private double radius;
+
+    public DamageNearestArrow(double radius) {
+        this.radius = radius;
+    }
 
     public void onHitGround(GroundHitEvent event) {
         Location location = event.location;
@@ -72,7 +76,7 @@ public class DamageNearestArrow extends CustomArrow {
             ArrowHelper.addPiercedEntities(arrow, livingEntity.getUniqueId());
 
             // get modified damage
-            double damage = arrow.getDamage() * 6.5D;
+            double damage = ArrowHelper.getPlayerLastDamage(shooter.getUniqueId(), arrow.getDamage() * 6.5D);
             DamageEvent damageEvent = new DamageEvent(shooter, arrow, livingEntity, damage);
             damage = ArrowHelper.calculateDamage(damageEvent, id);
             

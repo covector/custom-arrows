@@ -2,6 +2,7 @@ package dev.covector.customarrows.arrow;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -119,5 +120,18 @@ public class ArrowHelper {
             }
         }
         return true;
+    }
+
+    public static HashMap<String, Double> playerLastDamage = new HashMap<>();
+    public static void registerPlayerLastDamage(UUID uuid, double damage) {
+        playerLastDamage.put(uuid.toString(), damage);
+    }
+
+    public static double getPlayerLastDamage(UUID uuid, double defaultValue) {
+        String uuidString = uuid.toString();
+        if (playerLastDamage.containsKey(uuidString)) {
+            return playerLastDamage.get(uuidString);
+        }
+        return defaultValue;
     }
 }
