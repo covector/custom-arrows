@@ -15,9 +15,11 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
@@ -202,6 +204,13 @@ public class ArrowListener implements Listener {
         }
     }
 
+    @EventHandler (priority = EventPriority.MONITOR)
+    public void onFinishDamage(EntityDamageEvent event) {
+        if (event.getEntity() instanceof LivingEntity) {
+            ArrowHelper.clearLastDamagedBy((LivingEntity) event.getEntity());
+        }
+    }
+
     private HashSet<String> leftClickToggled = new HashSet<String>();
     public boolean toggleLeftClick(Player player, boolean toggle) {
         if (toggle) {
@@ -223,11 +232,7 @@ public class ArrowListener implements Listener {
     public void onArrowLeftClick(PlayerInteractEvent event) {
         Player player = event.getPlayer();
 
-        // if ((event.getAction() != Action.RIGHT_CLICK_AIR) || !player.isSneaking()) {
-        //     return;
-        // }
-
-        if ((event.getAction() != Action.LEFT_CLICK_AIR)) {
+        if ((event.getAction() != Action.LEFT_CLICK_AIR && event.getAction() != Action.LEFT_CLICK_BLOCK)) {
             return;
         }
 

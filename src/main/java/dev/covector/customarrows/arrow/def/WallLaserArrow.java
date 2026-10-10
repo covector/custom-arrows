@@ -88,11 +88,8 @@ public class WallLaserArrow extends CustomArrow {
         for (int i = 0; i < hitEntities.size(); i++) {
             LivingEntity livingEntity = (LivingEntity) hitEntities.get(0);
             
-            if (shooter instanceof Player) {
-                livingEntity.damage(damage, shooter);
-            } else {
-                livingEntity.damage(damage);
-            }
+            // set damaged by arrow
+            ArrowHelper.damageEntity(livingEntity, arrow, damage);
             
             // add into piercedEntities
             ArrowHelper.addPiercedEntities(arrow, livingEntity.getUniqueId());

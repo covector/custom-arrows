@@ -3,12 +3,15 @@ package dev.covector.customarrows.arrow;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.persistence.PersistentDataType;
 
 import dev.covector.customarrows.CustomArrowsPlugin;
@@ -56,6 +59,16 @@ public class ArrowHelper {
         }
     }
 
+    public static void triggerOnHitGround(CustomArrow.GroundHitEvent event, Set<Integer> exceptID) {
+        int[] ids = getCustomArrowIDs(event.arrow);
+        for (int id : ids) {
+            if (exceptID.contains(id)) { continue; }
+            CustomArrow arrow = ArrowRegistry.getArrowType(id);
+            if (!arrow.allowTrigger()) { continue; }
+            arrow.onHitGround(event);
+        }
+    }
+
     public static double calculateDamage(CustomArrow.DamageEvent event, int exceptID) {
         int[] ids = getCustomArrowIDs(event.arrow);
         for (int id : ids) {
@@ -92,6 +105,15 @@ public class ArrowHelper {
         return entities;
     }
 
+    public static Set<String> getPiercedEntitySet(Arrow arrow) {
+        UUID[] uuids = ArrowHelper.getPiercedEntityIDs(arrow);
+        HashSet<String> hitEntities = new HashSet<String>();
+        for (UUID uuid : uuids) {
+            hitEntities.add(uuid.toString());
+        }
+        return hitEntities;
+    }
+
     public static void addPiercedEntities(Arrow arrow, UUID entity) {
         // init
         if (!arrow.getPersistentDataContainer().has(CustomArrowsPlugin.plugin.piercedEntitiesKey, UUIDArrayDataType.INSTANCE)) {
@@ -109,6 +131,10 @@ public class ArrowHelper {
 
     public static void resetPiercedEntities(Arrow arrow) {
         arrow.getPersistentDataContainer().set(CustomArrowsPlugin.plugin.piercedEntitiesKey, UUIDArrayDataType.INSTANCE, new UUID[0]);
+    }
+
+    public static void setPiercedEntityIDs(Arrow arrow, UUID[] uuids) {
+        arrow.getPersistentDataContainer().set(CustomArrowsPlugin.plugin.piercedEntitiesKey, UUIDArrayDataType.INSTANCE, uuids);
     }
 
     public static boolean needsRemove(Arrow arrow) {
@@ -133,5 +159,25 @@ public class ArrowHelper {
             return playerLastDamage.get(uuidString);
         }
         return defaultValue;
+    }
+
+    public static void damageEntity(LivingEntity damagee, Entity damager, double damage) {
+        damagee.getPersistentDataContainer().set(CustomArrowsPlugin.plugin.lastDamagedByKey, PersistentDataType.STRING, damager.getUniqueId().toString());
+        damagee.damage(damage, damager);
+    }
+
+    public static Entity tryGetLastDamagedBy(LivingEntity damagee)
+    {
+        if (damagee.getPersistentDataContainer().has(CustomArrowsPlugin.plugin.lastDamagedByKey, PersistentDataType.STRING)) {
+            String uuid = damagee.getPersistentDataContainer().get(CustomArrowsPlugin.plugin.lastDamagedByKey, PersistentDataType.STRING);
+            return Bukkit.getEntity(UUID.fromString(uuid));
+        }
+        return null;
+    }
+
+    public static void clearLastDamagedBy(LivingEntity damagee) {
+        if (damagee.getPersistentDataContainer().has(CustomArrowsPlugin.plugin.lastDamagedByKey, PersistentDataType.STRING)) {
+            damagee.getPersistentDataContainer().set(CustomArrowsPlugin.plugin.lastDamagedByKey, PersistentDataType.STRING, null);
+        }
     }
 }

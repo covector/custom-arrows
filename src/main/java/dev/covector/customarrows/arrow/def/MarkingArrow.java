@@ -118,6 +118,12 @@ public class MarkingArrow extends CustomArrow implements AutoCloseable, Listener
         }
         LivingEntity entity = (LivingEntity) event.getEntity();
 
+        // check if damaged by arrow (for damage inflicted by running .damage(double, Entity) manually)
+        Entity manualDamager = ArrowHelper.tryGetLastDamagedBy(entity);
+        if (manualDamager instanceof Arrow) {
+            return;
+        }
+
         // check if marked
         if (!(marked.contains(entity.getUniqueId().toString()))) {
             return;
@@ -169,18 +175,15 @@ public class MarkingArrow extends CustomArrow implements AutoCloseable, Listener
                     ArrowHelper.addPiercedEntities(arrow, livingEntity.getUniqueId());
 
                     // get modified damage
-                    double damage = arrow.getDamage() * 6.5D;
+                    double damage = ArrowHelper.getPlayerLastDamage(shooter.getUniqueId(), arrow.getDamage() * 6.5D);
                     DamageEvent damageEvent = new DamageEvent(shooter, arrow, livingEntity, damage);
                     damage = ArrowHelper.calculateDamage(damageEvent, id);
                 
-                    // set damaged by player
-                    if (shooter instanceof Player) {
-                        livingEntity.damage(damage, shooter);
-                    } else {
-                        livingEntity.damage(damage);
-                    }
+                    // set damaged by arrow
+                    ArrowHelper.damageEntity(livingEntity, arrow, damage);
 
                     // trigger onHitEntity
+                    // bypass all allowTrigger() checks
                     boolean arrowStopped = piercedCount == markedCount;
                     CustomArrow.EntityHitEvent entityHitEvent = new CustomArrow.EntityHitEvent(shooter, arrow, livingEntity, arrowStopped);
                     for (int id : ids) {

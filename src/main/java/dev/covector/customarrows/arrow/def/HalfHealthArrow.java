@@ -20,7 +20,7 @@ import dev.covector.customarrows.arrow.CustomArrow;
 public class HalfHealthArrow extends CustomArrow {
     private static Color color = Color.fromRGB(74, 10, 5);
     private String name = "Half Health Arrow";
-    private double damageCap = 0.21D;
+    private double damageCap = 0.2D;
     private double selfDamage = 2D;
     public NamespacedKey originalDamageKey = new NamespacedKey(CustomArrowsPlugin.plugin, "original-damage");
 
@@ -58,13 +58,17 @@ public class HalfHealthArrow extends CustomArrow {
         double shooterHealth = event.shooter.getHealth();
         storeOriginalDamage(event);
         double damage = getOriginalDamage(event);
+
+        // if entity is above half health
         if (entity.getHealth() > 0.5 * maxhealth) {
             if (entity instanceof Player) {
                 entity.setHealth(0.5 * maxhealth);
                 return 0;
             }
             return Math.min(entity.getHealth() - 0.5 * maxhealth, shooterHealth * damage * damageCap);
+        // if below half health
         } else {
+            // set to half health
             entity.setHealth(0.5 * maxhealth);
             return 0;
         }

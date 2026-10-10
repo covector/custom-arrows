@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -41,11 +42,7 @@ public class DamageNearestArrow extends CustomArrow {
         LivingEntity shooter = event.shooter;
 
         // get hit entities
-        UUID[] uuids = ArrowHelper.getPiercedEntityIDs(arrow);
-        HashSet<String> hitEntities = new HashSet<String>();
-        for (UUID uuid : uuids) {
-            hitEntities.add(uuid.toString());
-        }
+        Set<String> hitEntities = ArrowHelper.getPiercedEntitySet(arrow);
 
         // sort nearest entities
         List<Entity> entities = location.getWorld().getNearbyEntities(location, radius, radius, radius).stream()
@@ -80,12 +77,8 @@ public class DamageNearestArrow extends CustomArrow {
             DamageEvent damageEvent = new DamageEvent(shooter, arrow, livingEntity, damage);
             damage = ArrowHelper.calculateDamage(damageEvent, id);
             
-            // set damaged by player
-            if (shooter instanceof Player) {
-                livingEntity.damage(damage, shooter);
-            } else {
-                livingEntity.damage(damage);
-            }
+            // set damaged by arrow
+            ArrowHelper.damageEntity(livingEntity, arrow, damage);
 
             // call hit entity event
             boolean arrowStopped = i >= entityDistances.length - 1 || canPierce <= 1;

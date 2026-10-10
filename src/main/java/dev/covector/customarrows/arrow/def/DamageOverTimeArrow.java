@@ -90,12 +90,8 @@ public class DamageOverTimeArrow extends CustomArrow {
                 DamageEvent damageEvent = new DamageEvent(shooter, arrow, livingEntity, baseDamage);
                 double finalDamage = ArrowHelper.calculateDamage(damageEvent, id);
                 
-                // set damaged by player
-                if (shooter instanceof Player) {
-                    livingEntity.damage(finalDamage, shooter);
-                } else {
-                    livingEntity.damage(finalDamage);
-                }
+                // set damage by nothing
+                livingEntity.damage(finalDamage);
 
                 // call hit entity event
                 EntityHitEvent entityHitEvent = new EntityHitEvent(shooter, arrow, livingEntity, true);

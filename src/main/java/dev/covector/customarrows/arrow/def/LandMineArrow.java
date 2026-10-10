@@ -96,19 +96,31 @@ public class LandMineArrow extends CustomArrow {
                     }
 
                     for (Entity entity : location.getWorld().getNearbyEntities(location, triggerRadius, triggerRadius, triggerRadius)) {
-                        // if ((entity instanceof LivingEntity || (entity instanceof Arrow && !(entity.getUniqueId().toString().equals(arrow.getUniqueId().toString()))))
-                        if (entity instanceof LivingEntity
+                        // deactivatable by non-players
+                        // if (
+                        //     !active
+                        //     && entity instanceof LivingEntity
+                        //     && !(entity instanceof ArmorStand)
+                        //     && !(entity instanceof Player)
+                        //     && !(entity instanceof Arrow)
+                        // ) {
+                        //     // deactivate
+                        //     location.getWorld().spawnParticle(Particle.SMOKE_LARGE, location, 8);
+                        //     arrow.remove();
+                        //     cancel();
+                        //     break;
+                        // }
+
+                        // detonatable by non-players
+                        if (
+                            active 
+                            && entity instanceof LivingEntity
                             && !(entity instanceof ArmorStand)
-                            && !(entity.getUniqueId().toString().equals(shooter.getUniqueId().toString()))) {
-                            if (active) {
-                                detonateTick = ti;
-                            } else {
-                                // deactivate
-                                // location.getWorld().spawnParticle(Particle.SMOKE_LARGE, location, 8);
-                                // arrow.remove();
-                                // cancel();
-                            }
-                            break;
+                            && !(entity instanceof Player)
+                            && !(entity instanceof Arrow)
+                        ) {
+                            // detonate
+                            detonateTick = ti;
                         }
                     }
                 } else {
@@ -129,12 +141,9 @@ public class LandMineArrow extends CustomArrow {
 
                             // damage and kb based on how close to center of explosion
                             double damage = ArrowHelper.getPlayerLastDamage(shooter.getUniqueId(), arrow.getDamage() * 6.5D) * damageMultiplier;
-                            double factor = 1 - entity.getLocation().distance(location) / blastRadius;
-                            if (shooter instanceof Player) {
-                                entity.damage(damage * factor, shooter);
-                            } else {
-                                entity.damage(damage * factor);
-                            }
+                            double factor = 1 - entity.getLocation().distance(location) / blastRadius; 
+                            // set damaged by arrow
+                            ArrowHelper.damageEntity(entity, arrow, damage * factor);
                             entity.setVelocity(new Vector(entity.getVelocity().getX(), 1 * factor, entity.getVelocity().getZ()));
                              
                             // call hit entity event
@@ -194,8 +203,7 @@ public class LandMineArrow extends CustomArrow {
         lore.add(ChatColor.GRAY + "Setup time: " + String.valueOf(setupDuration) + "s");
         lore.add(ChatColor.GRAY + "Trigger radius: " + String.valueOf(triggerRadius));
         lore.add(ChatColor.GRAY + "Blast radius: " + String.valueOf(blastRadius));
-        // lore.add(ChatColor.GRAY + "Any entity except self will deactivate mine during setup");
-        lore.add(ChatColor.GRAY + "Mine will detonate " + String.valueOf(delayTick/20D) + "s after triggered by entity except self");
+        // lore.add(ChatColor.GRAY + "Any non-player entity except deactivate mine during setup");
         lore.add(ChatColor.GRAY + "Mine will deactivate after " + String.valueOf(activeDuration) + "s");
         lore.add(ChatColor.GRAY + "Deals (" + String.valueOf(damageMultiplier) + " *  bow damage) amount of damage");
         lore.add(ChatColor.GRAY + "Will trigger onHitEntities of other arrows");

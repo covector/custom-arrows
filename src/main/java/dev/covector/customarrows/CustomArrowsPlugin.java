@@ -21,6 +21,7 @@ public class CustomArrowsPlugin extends JavaPlugin
     public NamespacedKey arrowTypesKey = new NamespacedKey(this, "arrow-types");
     public NamespacedKey piercedEntitiesKey = new NamespacedKey(this, "pierced-entities");
     public NamespacedKey pierceRemaining = new NamespacedKey(this, "pierce-remaining");
+    public NamespacedKey lastDamagedByKey = new NamespacedKey(this, "last-damaged-by");
 
     @Override
     public void onEnable() {

@@ -19,7 +19,7 @@ public class PercentDamageArrow extends CustomArrow {
     private static Color color = Color.fromRGB(74, 10, 5);
     private static String name = "Percent Damage Arrow";
     private double percent;
-    private double damageCap = 0.125D;
+    private double damageCap = 0.1D;
     private double selfDamage = 1D;
     public NamespacedKey originalDamageKey = new NamespacedKey(CustomArrowsPlugin.plugin, "original-damage");
 
